@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사회연대은행 사업구조 2026</title>
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS  — 4색 팔레트 + rgba 파생만 사용
+   ═══════════════════════════════════════════ */
+:root {
+  --W: #ffffff;
+  --B: #2d6ab2;
+  --K: #181818;
+  --G: #7a7b7a;
+
+  --B04: rgba(45,106,178,.04);
+  --B08: rgba(45,106,178,.08);
+  --B12: rgba(45,106,178,.12);
+  --B20: rgba(45,106,178,.20);
+  --B35: rgba(45,106,178,.35);
+  --B60: rgba(45,106,178,.60);
+  --G06: rgba(122,123,122,.06);
+  --G12: rgba(122,123,122,.12);
+  --G22: rgba(122,123,122,.22);
+  --G40: rgba(122,123,122,.40);
+  --K06: rgba(24,24,24,.06);
+  --K10: rgba(24,24,24,.10);
+
+  --sp1:4px; --sp2:8px; --sp3:12px; --sp4:16px;
+  --sp5:20px; --sp6:24px; --sp7:28px; --sp8:32px; --sp10:40px;
+  --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r20:20px;
+  --sh0:0 2px 8px rgba(24,24,24,.05);
+  --sh1:0 4px 16px rgba(24,24,24,.07);
+  --sh2:0 8px 28px rgba(24,24,24,.10);
+  --sh3:0 16px 48px rgba(24,24,24,.13);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Pretendard',sans-serif;
+  font-size:18px; line-height:1.65;
+  background:var(--W);
+  color:var(--K);
+  background-image:radial-gradient(circle,var(--G12) 1px,transparent 1px);
+  background-size:28px 28px;
+  background-attachment:fixed;
+}
+
+/* ── HERO ── */
+.hero{background:var(--B);position:relative;overflow:hidden;padding:0 var(--sp10)}
+.hero::before{content:'';position:absolute;top:-60%;right:-5%;width:45%;height:280%;background:var(--B60);transform:skewX(-14deg);pointer-events:none}
+.hero::after{content:'';position:absolute;top:-60%;right:8%;width:3px;height:280%;background:rgba(255,255,255,.12);transform:skewX(-14deg);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;padding:36px 0 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:var(--sp6);position:relative;z-index:1}
+.hero-eyebrow{font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:var(--sp2)}
+.hero-title{font-size:52px;font-weight:800;color:var(--W);letter-spacing:-1.5px;line-height:1.1}
+.hero-title em{font-style:normal;color:rgba(255,255,255,.55);font-weight:600;font-size:38px;display:block;margin-top:var(--sp2);letter-spacing:-.5px}
+.hero-right{text-align:right;flex-shrink:0}
+.hero-meta{font-size:16px;color:rgba(255,255,255,.5);line-height:2}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.12);color:var(--W);font-size:13px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.5px;margin-bottom:var(--sp3)}
+
+/* ── CONTROLS ── */
+.ctrl-bar{background:var(--W);border-bottom:1.5px solid var(--G12);position:sticky;top:0;z-index:50;box-shadow:var(--sh0)}
+.ctrl-inner{max-width:1200px;margin:0 auto;padding:0 var(--sp10);height:56px;display:flex;align-items:center;gap:var(--sp3)}
+.ctrl-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px solid var(--G22);border-radius:var(--r8);background:var(--W);color:var(--K);font-family:'Pretendard',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s ease;letter-spacing:-.2px}
+.ctrl-btn:hover{border-color:var(--B);color:var(--B);background:var(--B04)}
+.ctrl-div{width:1px;height:20px;background:var(--G22);margin:0 var(--sp2)}
+.legend{display:flex;align-items:center;gap:var(--sp4);margin-left:auto}
+.leg{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--G);font-weight:500}
+.leg-pip{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── MAIN ── */
+.main{max-width:1200px;margin:0 auto;padding:var(--sp10) var(--sp10) 72px}
+
+/* ── ROOT ── */
+.root-wrap{display:flex;flex-direction:column;align-items:center}
+.root-card{background:var(--K);color:var(--W);border-radius:var(--r16);padding:20px 40px;text-align:center;box-shadow:var(--sh2);position:relative;overflow:hidden}
+.root-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.03) 60px,rgba(255,255,255,.03) 61px);pointer-events:none}
+.root-name{font-size:22px;font-weight:800;letter-spacing:-.5px;position:relative}
+.root-since{font-size:14px;color:rgba(255,255,255,.4);margin-top:3px;font-weight:400;position:relative;letter-spacing:.5px}
+
+/* branch */
+.branch{width:100%;max-width:960px;position:relative;height:48px;flex-shrink:0}
+.branch::before{content:'';position:absolute;left:50%;top:0;width:2px;height:22px;background:var(--G22);transform:translateX(-50%)}
+.branch::after{content:'';position:absolute;left:10%;right:10%;top:22px;height:2px;background:var(--G22)}
+.branch-tick{position:absolute;top:22px;left:10%;right:10%;display:flex;justify-content:space-between}
+.branch-tick span{display:block;width:2px;height:26px;background:var(--G22)}
+
+/* ── 3 COLUMNS ── */
+.columns{display:grid;grid-template-columns:1fr 1fr .7fr;gap:var(--sp7);align-items:start}
+
+/* ── COLUMN HEADER ── */
+.col-title{border-radius:var(--r12);padding:16px 22px;margin-bottom:var(--sp5);position:relative;overflow:hidden}
+.ct-a{background:var(--B);color:var(--W)}
+.ct-a::after{content:'';position:absolute;top:-50%;right:-8%;width:40%;height:200%;background:rgba(255,255,255,.07);transform:skewX(-18deg);pointer-events:none}
+.ct-b{background:var(--W);color:var(--B);border:2px solid var(--B);box-shadow:inset 0 0 0 4px var(--B08)}
+.ct-c{background:var(--K);color:var(--W)}
+.ct-c::after{content:'';position:absolute;top:0;right:0;bottom:0;width:6px;background:var(--G);border-radius:0 var(--r12) var(--r12) 0}
+.col-title-text{font-size:18px;font-weight:800;letter-spacing:-.4px;line-height:1.3;position:relative;z-index:1}
+.col-title-eng{display:block;font-size:11px;font-weight:400;opacity:.55;margin-top:3px;letter-spacing:.3px;position:relative;z-index:1}
+
+/* ── LANE ── */
+.lane{background:var(--W);border-radius:var(--r20);padding:var(--sp5);border:1.5px solid var(--G12);box-shadow:var(--sh1)}
+
+/* ── SEC LABEL ── */
+.sec-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--G);margin-bottom:var(--sp3);padding-left:2px;display:flex;align-items:center;gap:var(--sp2)}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--G12)}
+
+/* ── ARROW ── */
+.arrow-row{display:flex;justify-content:center;padding:var(--sp3) 0;color:var(--G40)}
+
+/* ── CARD STACK ── */
+.card-stack{display:flex;flex-direction:column;gap:var(--sp3)}
+
+/* ── CARD ── */
+.card{border-radius:var(--r12);padding:var(--sp5);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;border:1.5px solid transparent;position:relative}
+.card:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.card-static{cursor:default}
+.card-static:hover{transform:none;box-shadow:none}
+.card-b{background:var(--B04);border-color:var(--B12)}
+.card-b:hover{border-color:var(--B35)}
+.card-g{background:var(--G06);border-color:var(--G12)}
+.card-g:hover{border-color:var(--G40)}
+.card-title{font-size:18px;font-weight:700;color:var(--K);letter-spacing:-.4px;margin-bottom:var(--sp2);display:flex;align-items:center;gap:var(--sp2)}
+.card-desc{font-size:16px;color:var(--G);line-height:1.65}
+
+/* ── TRIGGER ── */
+.trig{display:inline-flex;align-items:center;gap:6px;margin-top:var(--sp3);font-size:13px;font-weight:700;color:var(--B);cursor:pointer;user-select:none;transition:opacity .15s;letter-spacing:-.1px}
+.trig:hover{opacity:.7}
+.trig-icon{width:18px;height:18px;border-radius:50%;background:var(--B12);display:flex;align-items:center;justify-content:center;transition:transform .2s ease,background .15s;flex-shrink:0}
+.trig.open .trig-icon{transform:rotate(90deg);background:var(--B20)}
+
+/* ── DETAIL LIST ── */
+.dlist{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,margin-top .3s ease;opacity:0;margin-top:0}
+.dlist.open{max-height:9999px;opacity:1;margin-top:var(--sp3)}
+.dlist-inner{padding-top:var(--sp3);border-top:1px solid var(--G12);display:flex;flex-direction:column;gap:var(--sp2)}
+
+/* ── DETAIL ITEM ── */
+.ditem{background:rgba(255,255,255,.75);border:1px solid var(--G12);border-radius:var(--r8);padding:10px var(--sp4);transition:background .15s,border-color .15s}
+.ditem:hover{background:var(--W);border-color:var(--G22)}
+.ditem-name{font-size:16px;font-weight:500;color:var(--K);line-height:1.5;margin-bottom:5px}
+.ditem-tags{display:flex;flex-wrap:wrap;gap:var(--sp1)}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;font-size:12px;font-weight:700;padding:3px 9px;border-radius:var(--r4);letter-spacing:-.1px;white-space:nowrap}
+.t-gov{background:var(--B12);color:var(--B)}
+.t-csr{background:var(--G12);color:var(--K)}
+.t-self{background:var(--B08);color:var(--B);border:1px solid var(--B20)}
+.t-new{background:var(--K);color:var(--W)}
+
+/* ── H-SEP ── */
+.h-sep{margin-top:var(--sp5);padding-top:var(--sp5);border-top:1.5px dashed var(--G22)}
+
+/* ── FUND INTRO ── */
+.fund-intro{background:var(--G06);border:1px solid var(--G12);border-radius:var(--r8);padding:var(--sp4);margin-bottom:var(--sp4);font-size:16px;color:var(--G);line-height:1.7}
+.fund-intro strong{display:block;font-size:17px;font-weight:700;color:var(--K);margin-bottom:4px}
+
+/* ── BOTTOM PANELS ── */
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp7);margin-top:var(--sp10)}
+.panel{background:var(--W);border-radius:var(--r20);padding:var(--sp7);border:1.5px solid var(--G12);box-shadow:var(--sh1)}
+.panel-hd{font-size:20px;font-weight:800;color:var(--K);letter-spacing:-.5px;margin-bottom:var(--sp6);display:flex;align-items:center;gap:var(--sp3)}
+.panel-hd-dot{width:8px;height:24px;background:var(--B);border-radius:2px;flex-shrink:0}
+
+/* bar chart */
+.w-item{display:flex;align-items:center;gap:var(--sp3);margin-bottom:var(--sp3)}
+.w-label{font-size:16px;font-weight:600;color:var(--G);width:175px;flex-shrink:0;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-track{flex:1;height:8px;background:var(--G06);border-radius:4px;overflow:hidden}
+.w-fill{height:100%;border-radius:4px;transform-origin:left;transform:scaleX(0);transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.w-val{font-size:14px;font-weight:700;color:var(--G);min-width:62px;text-align:right;white-space:nowrap}
+
+/* source */
+.src-stack{display:flex;flex-direction:column;gap:var(--sp3)}
+.src-item{display:flex;align-items:flex-start;gap:var(--sp4);padding:var(--sp4) var(--sp5);background:var(--B04);border-radius:var(--r12);border:1.5px solid var(--B12);transition:border-color .15s,background .15s}
+.src-item:hover{background:var(--B08);border-color:var(--B20)}
+.src-icon{width:36px;height:36px;border-radius:var(--r8);background:var(--B12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:1px}
+.src-text{font-size:16px;color:var(--G);line-height:1.55}
+.src-text strong{display:block;font-size:17px;font-weight:700;color:var(--K);margin-bottom:2px}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:var(--sp8) var(--sp10);font-size:13px;color:var(--G);line-height:2;border-top:1px solid var(--G12);max-width:1200px;margin:0 auto}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ai{animation:fadeUp .55s cubic-bezier(.22,1,.36,1) both}
+.d0{animation-delay:.00s}.d1{animation-delay:.08s}.d2{animation-delay:.16s}
+.d3{animation-delay:.24s}.d4{animation-delay:.32s}.d5{animation-delay:.40s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1060px){
+  .columns{grid-template-columns:1fr;gap:var(--sp6)}
+  .bottom{grid-template-columns:1fr}
+  .branch{display:none}
+  .hero,.ctrl-inner,.main,.footer{padding-left:var(--sp6);padding-right:var(--sp6)}
+  .hero-inner{padding-left:0;padding-right:0;flex-direction:column;align-items:flex-start;gap:var(--sp4)}
+  .hero-right{text-align:left}
+  .hero-title{font-size:36px}
+  .hero-title em{font-size:26px}
+}
+@media(max-width:600px){
+  .legend{display:none}
+  .w-label{width:120px;font-size:14px}
+  .hero-title{font-size:28px}
+  .hero-title em{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero ai d0">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Business Architecture · 2026</div>
+      <h1 class="hero-title">사회연대은행<em>(사)함께만드는세상</em></h1>
+    </div>
+    <div class="hero-right">
+      <div class="hero-badge">v 2.0</div>
+      <div class="hero-meta">Since 2003<br>사회적금융 · 공동체<br>2026.03</div>
+    </div>
+  </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="ctrl-bar">
+  <div class="ctrl-inner">
+    <button class="ctrl-btn" onclick="expandAll()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>전체 펼치기
+    </button>
+    <button class="ctrl-btn" onclick="collapseAll()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>전체 접기
+    </button>
+    <div class="ctrl-div"></div>
+    <div class="legend">
+      <div class="leg"><div class="leg-pip" style="background:var(--B)"></div>정부수탁</div>
+      <div class="leg"><div class="leg-pip" style="background:var(--G)"></div>CSR</div>
+      <div class="leg"><div class="leg-pip" style="background:var(--B);opacity:.5"></div>자체기금</div>
+      <div class="leg"><div class="leg-pip" style="background:var(--K)"></div>신규</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="root-wrap">
+    <div class="root-card ai d1">
+      <div class="root-name">(사)함께만드는세상 · 사회연대은행</div>
+      <div class="root-since">사회적금융을 통해 더불어 함께 사는 건강한 공동체를 만든다</div>
+    </div>
+    <div class="branch">
+      <div class="branch-tick"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
+  <div class="columns">
+
+    <!-- COL 1 -->
+    <div class="ai d2">
+      <div class="col-title ct-a">
+        <div class="col-title-text">금융소외계층 지원</div>
+        <span class="col-title-eng">Inclusive Finance for the Underserved</span>
+      </div>
+      <div class="lane">
+        <div class="sec-label">대상</div>
+        <div class="card-stack">
+
+          <div class="card card-b" onclick="toggleCard(this)">
+            <div class="card-title">🏪 소상공인</div>
+            <div class="card-desc">사업준비 · 사업위기 · 재기</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 9건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">서울형 마이크로크레딧 창업지원사업</div><div class="ditem-tags"><span class="tag t-gov">서울시 수탁</span></div></div>
+              <div class="ditem"><div class="ditem-name">강남구 희망실현창구 창업지원사업</div><div class="ditem-tags"><span class="tag t-gov">강남구 수탁</span></div></div>
+              <div class="ditem"><div class="ditem-name">경기 극저신용대출 2.0 (광역 확장)</div><div class="ditem-tags"><span class="tag t-gov">경기도 수탁</span><span class="tag t-new">2026新</span></div></div>
+              <div class="ditem"><div class="ditem-name">저소득 소상공인 희망대출</div><div class="ditem-tags"><span class="tag t-csr">KDB나눔재단</span></div></div>
+              <div class="ditem"><div class="ditem-name">SGI서울보증 소상공인 대출지원</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">소상공인 경영환경 개선지원</div><div class="ditem-tags"><span class="tag t-csr">카카오</span></div></div>
+              <div class="ditem"><div class="ditem-name">JP모건 소상공인 지원사업</div><div class="ditem-tags"><span class="tag t-csr">JP모건</span></div></div>
+              <div class="ditem"><div class="ditem-name">HSBC 저소득 청년창업가 지원사업</div><div class="ditem-tags"><span class="tag t-csr">HSBC</span></div></div>
+              <div class="ditem"><div class="ditem-name">디지털 마케팅·역량강화 교육 / 온라인 판로개척</div><div class="ditem-tags"><span class="tag t-csr">성장지원</span></div></div>
+            </div></div>
+          </div>
+
+          <div class="card card-b" onclick="toggleCard(this)">
+            <div class="card-title">👤 청년·통합지원</div>
+            <div class="card-desc">자립준비 · 금융위기 · 지역청년</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 11건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">청년 고금리 대환대출 — 두나무 넥스트스테퍼즈</div><div class="ditem-tags"><span class="tag t-csr">두나무</span></div></div>
+              <div class="ditem"><div class="ditem-name">청년 긴급생계비 대출 (신복위 등)</div><div class="ditem-tags"><span class="tag t-gov">정부</span></div></div>
+              <div class="ditem"><div class="ditem-name">카카오뱅크 대환 대출 (고금리 전환)</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">청년 자산형성·신용형성 프로그램 (씨앗저축)</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">재무멘토링·금융교육 (1:1 컨설팅)</div><div class="ditem-tags"><span class="tag t-self">공통서비스</span></div></div>
+              <div class="ditem"><div class="ditem-name">HSBC '아임바리스타' 자립준비청년 자립지원</div><div class="ditem-tags"><span class="tag t-csr">HSBC</span></div></div>
+              <div class="ditem"><div class="ditem-name">카카오페이손해보험 자립준비청년 지원</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">한화생명 자립준비청년 지원사업</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">자립준비청년 재무멘토링·자조모임</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">아름다운재단·두나무·브라더스키퍼 자립지원</div><div class="ditem-tags"><span class="tag t-csr">협력</span></div></div>
+              <div class="ditem"><div class="ditem-name">함께온기금 자립청년 울타리 대출</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+            </div></div>
+          </div>
+
+          <div class="card card-b" onclick="toggleCard(this)">
+            <div class="card-title">🏠 금융위기 가구</div>
+            <div class="card-desc">다중채무 · 연체위기 · 생계비</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 3건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">긴급생계비 대출 (서울 사회복지공동모금 등)</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">다중채무 경감·채무조정 지원</div><div class="ditem-tags"><span class="tag t-gov">공공</span></div></div>
+              <div class="ditem"><div class="ditem-name">신용회복 프로그램 (신복위 협력)</div><div class="ditem-tags"><span class="tag t-gov">정부</span></div></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="arrow-row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></div>
+
+        <div class="sec-label">솔루션</div>
+        <div class="card-stack">
+          <div class="card card-b card-static"><div class="card-title">💳 대출지원 — 소상공인</div><div class="card-desc">사업자금 · 교육·멘토링 · 성장지원(인프라)</div></div>
+          <div class="card card-b card-static"><div class="card-title">💳 대출지원 — 청년</div><div class="card-desc">생계자금 · 교육·멘토링 · 창업자금</div></div>
+          <div class="card card-b card-static"><div class="card-title">💳 대출지원 — 위기가구</div><div class="card-desc">생계자금 · 교육·멘토링</div></div>
+        </div>
+
+        <div class="h-sep">
+          <div class="card card-b" onclick="toggleCard(this)">
+            <div class="card-title">👴 시니어 지원</div>
+            <div class="card-desc">사회공헌활동 · 세대 간 연결</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 3건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">KDB 시니어브릿지센터 운영</div><div class="ditem-tags"><span class="tag t-csr">KDB나눔재단</span></div></div>
+              <div class="ditem"><div class="ditem-name">시니어 사회공헌활동 교육 및 단체활동 지원</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">라이나50+ 시니어 어워즈 사회공헌</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 2 -->
+    <div class="ai d3">
+      <div class="col-title ct-b">
+        <div class="col-title-text">사회적경제 생태계 지원</div>
+        <span class="col-title-eng">Social Economy Ecosystem Support</span>
+      </div>
+      <div class="lane">
+        <div class="sec-label">솔루션</div>
+        <div class="card-stack">
+
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">🌱 육성</div>
+            <div class="card-desc">창업자금 · 인프라(공간) · 교육·컨설팅·멘토링</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 5건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">사회적기업가 육성사업 (인큐베이팅 12기~)</div><div class="ditem-tags"><span class="tag t-gov">고용노동부</span></div></div>
+              <div class="ditem"><div class="ditem-name">알파라운드 공간 지원 (인큐베이팅 허브)</div><div class="ditem-tags"><span class="tag t-self">자체운영</span></div></div>
+              <div class="ditem"><div class="ditem-name">사회적기업 성장솔루션 (경영멘토링·네트워킹)</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">수출입은행 사회적기업 지원사업</div><div class="ditem-tags"><span class="tag t-gov">수은 수탁</span></div></div>
+              <div class="ditem"><div class="ditem-name">법무법인 율촌 사회적기업 육성 협약</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+            </div></div>
+          </div>
+
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">💰 금융지원</div>
+            <div class="card-desc">투자 자본 연계 · 사업자금 대출</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 3건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">사회적기업 임팩트금융 (저금리 대출·사회혁신기금)</div><div class="ditem-tags"><span class="tag t-csr">CSR</span><span class="tag t-self">자체기금</span></div></div>
+              <div class="ditem"><div class="ditem-name">IR 투자 연계 (LP 참여·소셜벤처 투자 중개)</div><div class="ditem-tags"><span class="tag t-new">성장단계</span></div></div>
+              <div class="ditem"><div class="ditem-name">비영리 공익법인 목적사업비 배분</div><div class="ditem-tags"><span class="tag t-csr">CSR 배분</span></div></div>
+            </div></div>
+          </div>
+
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">📍 로컬</div>
+            <div class="card-desc">사업자금 · 인프라 · 교육·컨설팅 · 판로 연결</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 4건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">지역청년활동가 지원사업 (삼성생명·행안부·생보사회공헌위)</div><div class="ditem-tags"><span class="tag t-gov">정부</span><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">바이로컬(BuyLocal) 연계 — 지역 소비·연대</div><div class="ditem-tags"><span class="tag t-new">新방향</span></div></div>
+              <div class="ditem"><div class="ditem-name">하이로컬(Hi-Local) 연계 — 지역 특화 테마</div><div class="ditem-tags"><span class="tag t-new">新방향</span></div></div>
+              <div class="ditem"><div class="ditem-name">인구소멸지역 지역 청년단체 공익활동 지원</div><div class="ditem-tags"><span class="tag t-gov">정부</span></div></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="arrow-row"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></div>
+
+        <div class="sec-label">대상</div>
+        <div class="card-stack">
+          <div class="card card-g card-static"><div class="card-title">육성(인큐베이팅)</div><div class="card-desc">사회적기업·소셜벤처 · 로컬기업·청년 · 비영리단체</div></div>
+          <div class="card card-g card-static"><div class="card-title">금융지원</div><div class="card-desc">사회적기업·소셜벤처 · 로컬기업·청년 · 비영리단체</div></div>
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">공익활동 자원</div>
+            <div class="card-desc">사회적기업·소셜벤처</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 2건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">공익단체 물품·장비 지원</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+              <div class="ditem"><div class="ditem-name">복지시설 공익 인프라 확충 지원</div><div class="ditem-tags"><span class="tag t-csr">CSR</span></div></div>
+            </div></div>
+          </div>
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">로컬 지원</div>
+            <div class="card-desc">로컬기업·청년 · 비영리단체</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 1건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">함께온기금 비영리단체 대출 (for Impact)</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3 -->
+    <div class="ai d4">
+      <div class="col-title ct-c">
+        <div class="col-title-text">함께온기금</div>
+        <span class="col-title-eng">Hamkke-On Fund · 2024~</span>
+      </div>
+      <div class="lane">
+        <div class="fund-intro">
+          <strong>자체 설계·운영 순환형 기금</strong>
+          시민 후원금 + 대출 상환금 순환<br>재원 자립 목표 · 가능성 검증 단계
+        </div>
+        <div class="card-stack">
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">🚀 함께온 스타트</div>
+            <div class="card-desc">(저소득) 예비창업자 · 초기창업 지원</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 2건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">일반 예비창업자금 대출</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+              <div class="ditem"><div class="ditem-name">청년 38국수 (특화 청년창업 대출)</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+            </div></div>
+          </div>
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">🌱 함께온 라이프</div>
+            <div class="card-desc">사회적금융 대출 · 개인소액 · 금융회복</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 3건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">일반 개인소액대출 (긴급자금·생계비)</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+              <div class="ditem"><div class="ditem-name">자립청년 울타리 대출 (보호종료 청년 전용)</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+              <div class="ditem"><div class="ditem-name">카카오뱅크 대환 대출 (고금리 전환)</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+            </div></div>
+          </div>
+          <div class="card card-g" onclick="toggleCard(this)">
+            <div class="card-title">💡 함께온 임팩트</div>
+            <div class="card-desc">사회적경제조직 · 성장지원 · 사회책임금융</div>
+            <div class="trig"><div class="trig-icon"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></div>세부사업 2건</div>
+            <div class="dlist"><div class="dlist-inner">
+              <div class="ditem"><div class="ditem-name">비영리단체 대출</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+              <div class="ditem"><div class="ditem-name">사회적기업 대출</div><div class="ditem-tags"><span class="tag t-self">자체기금</span></div></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /columns -->
+
+  <!-- BOTTOM PANELS -->
+  <div class="bottom ai d5">
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-hd-dot"></div>사업 비중 분석</div>
+      <div class="w-item"><div class="w-label">마이크로크레딧 (소상공인)</div><div class="w-track"><div class="w-fill" data-pct=".92" style="background:var(--B)"></div></div><div class="w-val">누적 최대</div></div>
+      <div class="w-item"><div class="w-label">청년통합 포용금융</div><div class="w-track"><div class="w-fill" data-pct=".90" style="background:var(--B60)"></div></div><div class="w-val">1,372억</div></div>
+      <div class="w-item"><div class="w-label">사회적기업 육성</div><div class="w-track"><div class="w-fill" data-pct=".75" style="background:var(--G)"></div></div><div class="w-val">18,183건</div></div>
+      <div class="w-item"><div class="w-label">자립준비청년 특화</div><div class="w-track"><div class="w-fill" data-pct=".58" style="background:var(--B35)"></div></div><div class="w-val">급성장</div></div>
+      <div class="w-item"><div class="w-label">금융위기가구 긴급지원</div><div class="w-track"><div class="w-fill" data-pct=".45" style="background:var(--B20)"></div></div><div class="w-val">중간</div></div>
+      <div class="w-item"><div class="w-label">공익법인·비영리단체</div><div class="w-track"><div class="w-fill" data-pct=".40" style="background:var(--G40)"></div></div><div class="w-val">781건</div></div>
+      <div class="w-item"><div class="w-label">로컬·지역청년활동가</div><div class="w-track"><div class="w-fill" data-pct=".28" style="background:var(--G22)"></div></div><div class="w-val">성장 중</div></div>
+      <div class="w-item"><div class="w-label">시니어 사회공헌</div><div class="w-track"><div class="w-fill" data-pct=".20" style="background:var(--G12)"></div></div><div class="w-val">소규모</div></div>
+      <div class="w-item"><div class="w-label">함께온기금 (3개 상품)</div><div class="w-track"><div class="w-fill" data-pct=".16" style="background:var(--K10)"></div></div><div class="w-val">2024~ 초기</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-hd-dot"></div>재원 유형 구분</div>
+      <div class="src-stack">
+        <div class="src-item"><div class="src-icon">🏛️</div><div class="src-text"><strong>정부·지자체 수탁</strong>서울시, 경기도, 강남구, 고용노동부, 행안부, 수출입은행</div></div>
+        <div class="src-item"><div class="src-icon">🏢</div><div class="src-text"><strong>기업 CSR 협력</strong>두나무, 카카오, HSBC, KDB, 삼성생명, 한화, JP모건, SGI, 카카오뱅크</div></div>
+        <div class="src-item"><div class="src-icon">🌱</div><div class="src-text"><strong>자체 기금 (함께온기금)</strong>2024~ 자체 모금·순환 · 시민 후원금 + 대출 상환금 순환 구조</div></div>
+        <div class="src-item"><div class="src-icon">🤝</div><div class="src-text"><strong>공동모금·재단 협력</strong>아름다운재단, 사회복지공동모금회, 브라더스키퍼 등</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  분석 기반: 2022–2024 연차보고서 · 20주년 백서 · 기관소개서 · 함께온기금 명분서·브랜드 아키텍처 · 2025 사업실적<br>
+  v2.0 · 2026.03 · (사)함께만드는세상 사회연대은행
+</div>
+
+<script>
+function toggleCard(card){
+  const trig=card.querySelector('.trig');
+  const list=card.querySelector('.dlist');
+  if(!trig||!list)return;
+  const open=list.classList.contains('open');
+  list.classList.toggle('open',!open);
+  trig.classList.toggle('open',!open);
+}
+function expandAll(){
+  document.querySelectorAll('.dlist').forEach(e=>e.classList.add('open'));
+  document.querySelectorAll('.trig').forEach(e=>e.classList.add('open'));
+}
+function collapseAll(){
+  document.querySelectorAll('.dlist').forEach(e=>e.classList.remove('open'));
+  document.querySelectorAll('.trig').forEach(e=>e.classList.remove('open'));
+}
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.querySelectorAll('.w-fill').forEach(bar=>{
+      bar.style.transform=`scaleX(${bar.dataset.pct})`;
+    });
+  });
+},{threshold:0.2}).observe(document.querySelector('.bottom'));
+</script>
+</body>
+</html>
