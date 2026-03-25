@@ -13,7 +13,6 @@ Generated from the current machine on 2026-03-25.
 ### shared workspace and knowledge
 
 - `AI-Workspace` -> iCloud-backed shared document layer
-- `notebooklm-cowork` -> shared knowledge DB candidate
 
 ### code and config
 
@@ -68,4 +67,5 @@ Generated from the current machine on 2026-03-25.
 
 - `.zshrc` sources `.dotfiles/.env`, but the checked token variables are currently empty.
 - `.claude/settings.local.json` references environment variable names and local permissions, so it stays local-only.
+- `figma` and `notebooklm-cowork` were removed from the home-level workspace layout on 2026-03-25.
 - `.codex/config.toml` currently contains stable model, MCP, and trust settings without embedded secrets.

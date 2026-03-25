@@ -19,7 +19,6 @@ These should be treated as shared context candidates.
 
 Typical examples found in this environment:
 
-- `/Users/seongqkim/notebooklm-cowork`
 - handoff documents such as `bss-or-kr-handoff.md`
 - research PDFs, reference PPT/PDF/DOCX files
 - project reference bundles that explain a business, workflow, or deliverable
@@ -33,9 +32,8 @@ Policy:
 
 Folder-specific decisions:
 
-- `AI-Workspace/figma`: generated design outputs and template references. Sync through iCloud and back up to NAS.
-- `notebooklm-cowork`: canonical AI learning corpus and shared knowledge DB candidate.
 - `cowork`: legacy source folder. Its unique file has already been promoted, so the folder is no longer part of the active knowledge layout.
+- Figma output folders and ad-hoc inbox DB folders should be treated as project-specific working storage, not as default shared home-level paths.
 
 ## 2. Reusable Tool Config
 
@@ -141,8 +139,6 @@ Policy:
 
 ### adopt into AI-Workspace knowledge layer
 
-- `notebooklm-cowork`
-- `AI-Workspace/figma`
 - selected research and handoff documents from `Downloads` or `Desktop`
 
 ### keep in place
@@ -191,11 +187,10 @@ If an asset helps rebuild a machine or tool setup, it belongs to `config`.
 
 ## 7. Duplicate Handling Rule
 
-When the same file existed in both `cowork` and `notebooklm-cowork`:
+When the same file existed in both old working folders:
 
-- prefer `notebooklm-cowork` as the canonical AI-readable source
-- promote non-duplicate files into `notebooklm-cowork`
-- remove exact duplicates from `cowork` after archival
+- choose one canonical location based on the current workflow
+- remove exact duplicates after archival
 - if files differ by purpose, rename them so the role is explicit
 
 ## 8. Sync Matrix Rule

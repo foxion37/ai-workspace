@@ -102,7 +102,7 @@ Typical examples:
 - Do not fold all code repos into `AI-Workspace`.
 - Only shared rules, prompts, and workspace-level documentation should be mirrored into `AI-Workspace`.
 
-### `/Users/seongqkim/notebooklm-cowork`, `/Users/seongqkim/developer/tools/tmux`
+### `/Users/seongqkim/developer/tools/tmux`
 
 - Classify per project.
 - If they contain active cross-device materials, mirror the document layer into `AI-Workspace`.
@@ -110,13 +110,12 @@ Typical examples:
 
 Current default:
 
-- `notebooklm-cowork` -> adopt as shared knowledge DB
 - `developer/tools/tmux` -> keep as local helper tooling
 
 Note:
 
-- Figma outputs should live under `AI-Workspace/figma`.
-- A separate home-level `~/figma` alias is not required.
+- Figma outputs are no longer part of the default home-level workspace layout.
+- `notebooklm-cowork` was removed from the home layout and should not be recreated as a standard alias.
 
 ## Triage Process
 

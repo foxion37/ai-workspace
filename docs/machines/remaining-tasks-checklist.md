@@ -43,4 +43,3 @@ Current status:
 - [ ] `git -C ~/.dotfiles status --short` is clean on Mac mini
 - [ ] Both machines can enter the shared workspace through:
   - `~/AI-Workspace`
-  - `~/notebooklm-cowork`
