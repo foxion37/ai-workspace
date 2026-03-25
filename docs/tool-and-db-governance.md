@@ -56,11 +56,49 @@ Policy:
 - Keep canonical reusable config in dedicated config repos or config folders.
 - Mirror only stable, reusable settings into shared documentation.
 - Do not treat all tool home folders as shared workspace content.
+- For this environment, the policy repo is `ai-workspace` and the reusable config repo is `mac-dotfiles`.
 
 Folder-specific decision:
 
 - `tmux`: reusable tool config. Keep it as config, not as a knowledge DB.
 - `skills-lock.json`: skill-installation lock metadata. Keep it as config/runtime metadata, not as shared knowledge.
+
+Git sync baseline for reusable config:
+
+### track directly in GitHub
+
+- `.dotfiles/.zshrc`
+- `.bashrc`
+- `.dotfiles/git/gitconfig`
+- `.dotfiles/tmux/tmux.conf`
+- `tmux/`
+- `skills-lock.json`
+- selected stable settings in `.codex/config.toml`
+- selected stable settings in `.claude/settings.json`
+
+### template only
+
+- `.dotfiles/ssh/config`
+
+Reason:
+
+- the SSH config contains useful structure, but it also carries machine-specific host data such as IPs and user names
+- keep the shared shape in Git, but leave the final machine values in a local overlay such as `ssh/config.local`
+
+### local only
+
+- `.dotfiles/.env`
+- `.env.local`
+- `.gitconfig.local`
+- `.zshrc.local`
+- `ssh/config.local`
+- `.claude/settings.local.json`
+- `.codex/auth.json`
+
+Reason:
+
+- these files may contain secrets, local overrides, auth state, or machine-specific values
+- they must not become the shared baseline
 
 ## 3. Runtime Databases And State
 
@@ -126,9 +164,15 @@ Policy:
 - `.claude/debug`
 - `.claude/cache`
 - `.claude/shell-snapshots`
+- `.claude/backups`
+- `.claude/file-history`
+- `.claude/projects`
+- `.claude/session-env`
 - `.codex/log`
+- `.codex/history.jsonl`
 - `.codex/sqlite`
 - `.codex/shell_snapshots`
+- `.codex/auth.json`
 - `.cursor`
 - package caches and temporary folders
 
@@ -148,3 +192,18 @@ When the same file existed in both `cowork` and `notebooklm-cowork`:
 - promote non-duplicate files into `notebooklm-cowork`
 - remove exact duplicates from `cowork` after archival
 - if files differ by purpose, rename them so the role is explicit
+
+## 8. Sync Matrix Rule
+
+The formal Git sync baseline for MacBook -> GitHub -> Mac mini lives in `docs/sync-matrix.md`.
+
+Use that document when deciding:
+
+- which files are shared across machines
+- which files are templates only
+- which files are local-only and must stay out of Git
+
+When this document and the sync matrix overlap:
+
+- this document defines the policy categories
+- the sync matrix defines the exact tracked paths

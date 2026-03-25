@@ -9,6 +9,8 @@
 - [Workspace Structure](docs/workspace-structure.md)
 - [Folder Governance](docs/folder-governance.md)
 - [Tool And DB Governance](docs/tool-and-db-governance.md)
+- [Sync Matrix](docs/sync-matrix.md)
+- [Machine Baselines](docs/machines/README.md)
 - [Naming Convention](docs/naming-convention.md)
 - [Runbook](docs/runbook.md)
 - [Decision Log](docs/decision-log.md)
