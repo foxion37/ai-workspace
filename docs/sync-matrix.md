@@ -29,9 +29,8 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 | --- | --- | --- | --- | --- | --- |
 | `AI-Workspace` | knowledge root | no | no | yes | iCloud-backed working data, not a Git payload |
 | `developer` | code area | no | no | yes | repos live here, but this home-level path is not the shared baseline |
-| `figma` | knowledge | no | no | yes | synced through iCloud and backup |
 | `notebooklm-cowork` | knowledge | no | no | yes | shared knowledge DB, not a Git payload |
-| `tmux` | config | yes | no | no | reusable tool config folder |
+| `developer/tools/tmux` | tooling | no | no | yes | local tmux helper scripts |
 | `.bashrc` | config | yes | no | no | lightweight shell bootstrap |
 | `.dotfiles/.zshrc` | config | yes | no | no | shared shell behavior |
 | `.dotfiles/git/gitconfig` | config | yes | no | no | shared Git defaults |
@@ -58,11 +57,13 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 | `.claude/debug/**` | runtime | no | no | yes | debug output |
 | `.claude/cache/**` | runtime | no | no | yes | cache |
 | `.claude/backups/**` | runtime | no | no | yes | generated backups |
-| `*.local-backup-*` | backup | no | no | yes | recovery-only snapshots |
+| `developer/backups/manual-snapshots/**` | backup | no | no | yes | recovery-only manual snapshots |
 
 ## Notes
 
 - If a tracked config later needs secrets or machine-specific values, split it into a tracked template and a local override.
 - Use `docs/machines/` for actual machine manifests and diff reports.
-- `~/AI-Workspace`, `~/figma`, and `~/notebooklm-cowork` are the preferred cross-machine entry paths even if the physical iCloud path differs per machine.
-- `tmux` top-level helper folders are not part of the cross-machine baseline; use `.dotfiles/tmux` and `~/.tmux.conf` as the shared tmux source.
+- `~/AI-Workspace` and `~/notebooklm-cowork` are the preferred cross-machine entry paths even if the physical iCloud path differs per machine.
+- Use `~/AI-Workspace/figma` directly for Figma outputs instead of a separate `~/figma` alias.
+- Use `.dotfiles/tmux` and `~/.tmux.conf` as the shared tmux source. Keep helper scripts under `developer/tools/tmux` as local tooling.
+- Do not create manual backup snapshots in the home root. Use `developer/backups/manual-snapshots/` for temporary recovery copies.

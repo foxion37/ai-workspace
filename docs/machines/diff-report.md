@@ -10,7 +10,6 @@
 ### path aliases missing on Mac mini
 
 - `~/AI-Workspace`
-- `~/figma`
 - `~/notebooklm-cowork`
 
 These were added as compatibility symlinks that point into `~/icloud/AI-Workspace`.
@@ -33,8 +32,8 @@ These were added as compatibility symlinks that point into `~/icloud/AI-Workspac
 ### intentionally local differences
 
 - Mac mini has `icloud`, `docs`, and `manual`
-- MacBook has `AI-Workspace`, `figma`, `notebooklm-cowork`, and `tmux`
-- `~/tmux/dev.sh` on MacBook and `~/.tmux/plugins/tpm` on Mac mini are not the same role and should stay local
+- MacBook has `AI-Workspace` and `notebooklm-cowork` as home-level workspace entry points
+- MacBook keeps `developer/tools/tmux/dev.sh` as local tooling, while Mac mini uses `~/.tmux/plugins/tpm`
 
 ## Convergence Rule
 

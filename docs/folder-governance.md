@@ -89,6 +89,7 @@ Typical examples:
 
 - Keep app-owned or personal document storage in place unless it becomes part of the shared workspace.
 - Historical backup folders should be classified as `backup`.
+- Manual safety snapshots should not be created in the home root. Put them under `developer/backups/manual-snapshots/` or inside the folder being changed.
 
 ### `/Users/seongqkim/Downloads`
 
@@ -101,7 +102,7 @@ Typical examples:
 - Do not fold all code repos into `AI-Workspace`.
 - Only shared rules, prompts, and workspace-level documentation should be mirrored into `AI-Workspace`.
 
-### `/Users/seongqkim/notebooklm-cowork`, `/Users/seongqkim/figma`, `/Users/seongqkim/tmux`
+### `/Users/seongqkim/notebooklm-cowork`, `/Users/seongqkim/developer/tools/tmux`
 
 - Classify per project.
 - If they contain active cross-device materials, mirror the document layer into `AI-Workspace`.
@@ -109,9 +110,13 @@ Typical examples:
 
 Current default:
 
-- `figma` -> adopt as synced output/reference
 - `notebooklm-cowork` -> adopt as shared knowledge DB
-- `tmux` -> keep as tool config
+- `developer/tools/tmux` -> keep as local helper tooling
+
+Note:
+
+- Figma outputs should live under `AI-Workspace/figma`.
+- A separate home-level `~/figma` alias is not required.
 
 ## Triage Process
 

@@ -26,10 +26,9 @@ Captured from the reference machine after SSH key auth was restored on 2026-03-2
 - `.tmux.conf` -> symlink to `.dotfiles/tmux/tmux.conf`
 - `.codex/config.toml` -> symlink to `.dotfiles/codex/config.toml`
 
-### current gaps versus MacBook aliases
+### current gaps versus current MacBook layout
 
 - `~/AI-Workspace` -> added as alias to `~/icloud/AI-Workspace`
-- `~/figma` -> added as alias to `~/icloud/AI-Workspace/figma`
 - `~/notebooklm-cowork` -> added as alias to `~/icloud/AI-Workspace/knowledge-db/notebooklm-cowork`
 - `~/tmux` is intentionally not treated as a shared alias baseline
 
@@ -54,5 +53,6 @@ Captured from the reference machine after SSH key auth was restored on 2026-03-2
 
 - `.zshrc` and `.gitconfig` already match the MacBook baseline closely.
 - `.tmux.conf` is close but the Mac mini file has extra clipboard and copy-mode bindings.
+- Figma outputs should be opened through `~/AI-Workspace/figma`; no separate `~/figma` alias is required.
 - `.codex/config.toml` is richer than the MacBook version, but some parts are machine-path-specific and need filtering before becoming the shared baseline.
 - `.claude/settings.json` and `.claude/settings.local.json` are not currently managed through `mac-dotfiles`.

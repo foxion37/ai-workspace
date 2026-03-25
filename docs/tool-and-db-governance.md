@@ -20,7 +20,6 @@ These should be treated as shared context candidates.
 Typical examples found in this environment:
 
 - `/Users/seongqkim/notebooklm-cowork`
-- `/Users/seongqkim/figma`
 - handoff documents such as `bss-or-kr-handoff.md`
 - research PDFs, reference PPT/PDF/DOCX files
 - project reference bundles that explain a business, workflow, or deliverable
@@ -34,7 +33,7 @@ Policy:
 
 Folder-specific decisions:
 
-- `figma`: generated design outputs and template references. Sync through iCloud and back up to NAS.
+- `AI-Workspace/figma`: generated design outputs and template references. Sync through iCloud and back up to NAS.
 - `notebooklm-cowork`: canonical AI learning corpus and shared knowledge DB candidate.
 - `cowork`: legacy source folder. Its unique file has already been promoted, so the folder is no longer part of the active knowledge layout.
 
@@ -45,7 +44,7 @@ These are important, but they are not the same as shared project context.
 Typical examples found in this environment:
 
 - `/Users/seongqkim/.dotfiles`
-- `/Users/seongqkim/tmux`
+- `/Users/seongqkim/developer/tools/tmux`
 - `/Users/seongqkim/skills-lock.json`
 - selected settings under `/Users/seongqkim/.claude`
 - selected settings under `/Users/seongqkim/.codex`
@@ -60,7 +59,7 @@ Policy:
 
 Folder-specific decision:
 
-- `tmux`: reusable tool config. Keep it as config, not as a knowledge DB.
+- `developer/tools/tmux`: local tmux helper scripts. Keep them as tooling, not as shared knowledge.
 - `skills-lock.json`: skill-installation lock metadata. Keep it as config/runtime metadata, not as shared knowledge.
 
 Git sync baseline for reusable config:
@@ -71,7 +70,6 @@ Git sync baseline for reusable config:
 - `.bashrc`
 - `.dotfiles/git/gitconfig`
 - `.dotfiles/tmux/tmux.conf`
-- `tmux/`
 - `skills-lock.json`
 - selected stable settings in `.codex/config.toml`
 - selected stable settings in `.claude/settings.json`
@@ -144,13 +142,13 @@ Policy:
 ### adopt into AI-Workspace knowledge layer
 
 - `notebooklm-cowork`
-- `figma`
+- `AI-Workspace/figma`
 - selected research and handoff documents from `Downloads` or `Desktop`
 
 ### keep in place
 
 - `developer`
-- `tmux`
+- `developer/tools/tmux`
 - `.dotfiles`
 - app-owned folders under `Library`
 
@@ -158,6 +156,13 @@ Policy:
 
 - large PDF/PPT/DOCX bundles that are reference-heavy but not active every day
 - older deliverables
+- manual safety snapshots under `developer/backups/manual-snapshots/`
+
+Backup placement rule:
+
+- Do not leave manual `*.local-backup-*` folders in the home root.
+- Prefer `developer/backups/manual-snapshots/DATE/` for temporary safety copies.
+- If a folder-specific local backup is clearer, keep it inside that folder's own archive area.
 
 ### ignore as shared context
 

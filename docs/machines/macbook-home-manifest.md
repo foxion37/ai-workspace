@@ -13,13 +13,12 @@ Generated from the current machine on 2026-03-25.
 ### shared workspace and knowledge
 
 - `AI-Workspace` -> iCloud-backed shared document layer
-- `figma` -> synced design references and outputs
 - `notebooklm-cowork` -> shared knowledge DB candidate
 
 ### code and config
 
 - `developer` -> code repositories
-- `tmux` -> reusable tool config
+- `developer/tools/tmux` -> local tmux helper scripts
 - `.dotfiles` -> shell, Git, and SSH config source
 
 ### intake
@@ -31,8 +30,7 @@ Generated from the current machine on 2026-03-25.
 
 - `Library` -> app-owned machine state
 - `Applications` -> app-owned machine state
-- `AI-Workspace.local-backup-2026-03-25` -> backup snapshot
-- `figma.local-backup-2026-03-25` -> backup snapshot
+- `developer/backups/manual-snapshots/2026-03-25` -> manual backup snapshot location
 
 ## Shared Config Baseline
 
@@ -42,7 +40,6 @@ Generated from the current machine on 2026-03-25.
 - `.dotfiles/.zshrc`
 - `.dotfiles/git/gitconfig`
 - `.dotfiles/tmux/tmux.conf`
-- `tmux/`
 - `skills-lock.json`
 - `.codex/config.toml` (stable settings only)
 - `.codex/AGENTS.md`
