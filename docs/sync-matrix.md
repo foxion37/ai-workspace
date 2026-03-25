@@ -30,6 +30,7 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 | `AI-Workspace` | knowledge root | no | no | yes | iCloud-backed working data, not a Git payload |
 | `developer` | code area | no | no | yes | repos live here, but this home-level path is not the shared baseline |
 | `developer/tools/tmux` | tooling | no | no | yes | local tmux helper scripts |
+| `developer/tools/*` | tooling | no | no | yes | preferred location for agent-managed AI tool helpers and local utility repos |
 | `.bashrc` | config | yes | no | no | lightweight shell bootstrap |
 | `.dotfiles/.zshrc` | config | yes | no | no | shared shell behavior |
 | `.dotfiles/git/gitconfig` | config | yes | no | no | shared Git defaults |

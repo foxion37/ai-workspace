@@ -60,6 +60,11 @@ Folder-specific decision:
 - `developer/tools/tmux`: local tmux helper scripts. Keep them as tooling, not as shared knowledge.
 - `skills-lock.json`: skill-installation lock metadata. Keep it as config/runtime metadata, not as shared knowledge.
 
+Tool install rule:
+
+- Use `developer/tools/` for agent-managed AI tool helpers, local utility repos, wrappers, and install scripts.
+- Use `Applications` or `~/Applications` for standard macOS GUI app installs.
+
 Git sync baseline for reusable config:
 
 ### track directly in GitHub
