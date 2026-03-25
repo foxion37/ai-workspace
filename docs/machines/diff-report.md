@@ -13,6 +13,11 @@
 
 `~/AI-Workspace` was added as a compatibility symlink that points into `~/icloud/AI-Workspace`.
 
+### home-root standard now shared
+
+- `~/AGENTS.md` and `~/CLAUDE.md` are now sourced from `ai-workspace/docs/home-root/`
+- `.bashrc`, `.zprofile`, and `orchestra-init-codex-led.sh` are now sourced from `mac-dotfiles`
+
 ### same shape, mostly aligned
 
 - `.zshrc` -> symlink to `.dotfiles/.zshrc` on both machines
@@ -31,6 +36,8 @@
 ### intentionally local differences
 
 - Mac mini has `icloud`, `docs`, and `manual`
+- `icloud` remains a local system-routing path
+- `docs` and `manual` are cleanup candidates rather than shared standard folders
 - MacBook uses `AI-Workspace` as the only standard home-level workspace entry point
 - MacBook keeps `developer/tools/tmux/dev.sh` as local tooling, while Mac mini uses `~/.tmux/plugins/tpm`
 
@@ -38,5 +45,6 @@
 
 - make document workspace entry paths match by adding aliases on Mac mini
 - use `mac-dotfiles` as the actual shared config repo
+- use `ai-workspace` as the source of truth for home-root policy docs
 - promote only machine-neutral parts of richer Mac mini config into the shared baseline
 - keep machine-path hooks, auth, secrets, and runtime state local

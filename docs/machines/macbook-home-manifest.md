@@ -19,6 +19,10 @@ Generated from the current machine on 2026-03-25.
 - `developer` -> code repositories
 - `developer/tools/tmux` -> local tmux helper scripts
 - `.dotfiles` -> shell, Git, and SSH config source
+- `AGENTS.md` -> home-root policy doc sourced from `ai-workspace`
+- `CLAUDE.md` -> Claude-specific home-root policy doc sourced from `ai-workspace`
+- `.bashrc` and `.zprofile` -> bootstrap files sourced from `mac-dotfiles`
+- `orchestra-init-codex-led.sh` -> optional shared bootstrap script sourced from `mac-dotfiles`
 
 ### intake
 
@@ -63,9 +67,24 @@ Generated from the current machine on 2026-03-25.
 - `.codex/auth.json`
 - runtime DBs, logs, caches, session history
 
+## Standard Home Root Entries
+
+- `~/AI-Workspace`
+- `~/developer`
+- `~/.dotfiles`
+- `~/AGENTS.md`
+- `~/CLAUDE.md`
+- `~/.bashrc`
+- `~/.zprofile`
+
+## Cleanup Candidates
+
+- none currently intended in the standard layout
+
 ## Current Notes
 
 - `.zshrc` sources `.dotfiles/.env`, but the checked token variables are currently empty.
 - `.claude/settings.local.json` references environment variable names and local permissions, so it stays local-only.
 - `figma` and `notebooklm-cowork` were removed from the home-level workspace layout on 2026-03-25.
 - `.codex/config.toml` currently contains stable model, MCP, and trust settings without embedded secrets.
+- `~/docs` and `~/manual` are not part of the target standard layout.

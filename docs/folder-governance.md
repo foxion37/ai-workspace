@@ -117,6 +117,30 @@ Note:
 - Figma outputs are no longer part of the default home-level workspace layout.
 - `notebooklm-cowork` was removed from the home layout and should not be recreated as a standard alias.
 
+### home-root policy docs
+
+- Keep `~/AGENTS.md` and `~/CLAUDE.md` as standard home-root entry documents.
+- Canonical source lives in `ai-workspace/docs/home-root/`.
+- Deployed copies in the home root should be links or generated copies, not hand-maintained snowflakes.
+
+### home-root bootstrap files
+
+- Keep `.bashrc`, `.zprofile`, and other bootstrap scripts in `~/.dotfiles`.
+- Deploy them into the home root from `mac-dotfiles`.
+- Do not treat runtime state or local overrides as shared bootstrap.
+
+### `/Users/seongqkim/docs`
+
+- Do not treat `~/docs` as a permanent standard folder.
+- If it contains active shared documents, move them into `AI-Workspace/docs/`, `reference/`, or `archive/`.
+- Otherwise classify it as a cleanup candidate and remove it from the standard home layout.
+
+### `/Users/seongqkim/manual`
+
+- Do not treat `~/manual` as a permanent standard folder.
+- Move reusable references into `AI-Workspace/reference/` or another intentional location.
+- After migration, remove it from the standard home layout.
+
 ## Triage Process
 
 For any folder outside `AI-Workspace`, decide in this order:
@@ -134,5 +158,8 @@ If the answer is unclear, default to `keep` first and move only after the folder
 - `Documents/backup` -> backup
 - `Downloads` -> ignore after triage
 - `developer` -> keep
+- `AGENTS.md`, `CLAUDE.md` -> keep as standard home-root policy docs
+- `.bashrc`, `.zprofile`, home bootstrap scripts -> keep through `mac-dotfiles`
+- `docs`, `manual` -> cleanup candidate unless intentionally rehomed
 - hidden config and cache folders -> ignore
 - `AI-Workspace` -> adopt as the shared document layer

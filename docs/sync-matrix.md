@@ -31,7 +31,11 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 | `developer` | code area | no | no | yes | repos live here, but this home-level path is not the shared baseline |
 | `developer/tools/tmux` | tooling | no | no | yes | local tmux helper scripts |
 | `developer/tools/*` | tooling | no | no | yes | preferred location for agent-managed AI tool helpers and local utility repos |
+| `AGENTS.md` | home policy | yes | no | no | canonical source lives in `ai-workspace/docs/home-root/AGENTS.md` |
+| `CLAUDE.md` | home policy | yes | no | no | canonical source lives in `ai-workspace/docs/home-root/CLAUDE.md` |
 | `.bashrc` | config | yes | no | no | lightweight shell bootstrap |
+| `.zprofile` | bootstrap | yes | no | no | tracked in `mac-dotfiles` and deployed to home root |
+| `orchestra-init-codex-led.sh` | bootstrap | yes | no | no | tracked in `mac-dotfiles/scripts/` and linked into home root |
 | `.dotfiles/.zshrc` | config | yes | no | no | shared shell behavior |
 | `.dotfiles/git/gitconfig` | config | yes | no | no | shared Git defaults |
 | `.dotfiles/tmux/tmux.conf` | config | yes | no | no | shared tmux behavior |
@@ -58,6 +62,9 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 | `.claude/cache/**` | runtime | no | no | yes | cache |
 | `.claude/backups/**` | runtime | no | no | yes | generated backups |
 | `developer/backups/manual-snapshots/**` | backup | no | no | yes | recovery-only manual snapshots |
+| `icloud` | system routing | no | no | yes | local path into iCloud Drive, not a shared workspace entry |
+| `docs` | cleanup candidate | no | no | yes | do not keep as a permanent standard root folder |
+| `manual` | cleanup candidate | no | no | yes | move reference content elsewhere, then remove from standard root layout |
 
 ## Notes
 
@@ -65,5 +72,7 @@ After the first alignment pass, GitHub becomes the distribution source for the s
 - Use `docs/machines/` for actual machine manifests and diff reports.
 - `~/AI-Workspace` is the preferred cross-machine entry path even if the physical iCloud path differs per machine.
 - Do not treat `~/figma` or `~/notebooklm-cowork` as standard home-level aliases.
+- Treat `~/AGENTS.md` and `~/CLAUDE.md` as shared home-root docs sourced from `ai-workspace`.
+- Treat `.bashrc`, `.zprofile`, and root bootstrap scripts as shared only when sourced from `mac-dotfiles`.
 - Use `.dotfiles/tmux` and `~/.tmux.conf` as the shared tmux source. Keep helper scripts under `developer/tools/tmux` as local tooling.
 - Do not create manual backup snapshots in the home root. Use `developer/backups/manual-snapshots/` for temporary recovery copies.
