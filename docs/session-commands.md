@@ -48,6 +48,13 @@ SESSION_CLEANUP_CMD="npm run format"
 SESSION_VALIDATE_CMD="npm test"
 ```
 
+Current local defaults:
+
+- `~/developer/projects/ai-workspace/.sessionrc`
+  - `SESSION_VALIDATE_CMD="git diff --check"`
+- `~/.dotfiles/.sessionrc`
+  - `SESSION_VALIDATE_CMD="bash -n .zshrc install.sh scripts/session-common.sh scripts/session-save scripts/session-finish"`
+
 ## Placement
 
 The commands live in:
