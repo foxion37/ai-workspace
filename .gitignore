@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Local temp and cache
+temp/
+tmp/
+cache/
+.cache/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Editor files
+.vscode/
+.idea/
