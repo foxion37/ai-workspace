@@ -15,6 +15,17 @@ The first project surface should answer:
 
 It should not become a dump of raw logs.
 
+## Standard Contract
+
+The standard project surface is:
+
+- hub page for orientation
+- `current` as the source of truth
+- `reports` for dated snapshots
+- `check log` for checks and follow-up
+
+This standard is fixed before live Notion rollout work.
+
 ## Hub Structure
 
 Recommended structure:
@@ -58,6 +69,7 @@ Rules:
 - overwrite stale status instead of stacking snapshots
 - show only open blockers and active watch items
 - use links for detail, not pasted raw logs
+- do not move shared ops policy or multi-repo automation notes into this page
 
 ### `reports`
 
@@ -68,6 +80,7 @@ Rules:
 - store time-stamped notes only
 - do not use it as the current dashboard
 - link back to `current` when the snapshot changes active status
+- treat local work-note Markdown as the canonical long-form source when more detail is needed
 
 ### `check log`
 
@@ -78,6 +91,7 @@ Rules:
 - keep entries short
 - track only items that still need attention or should stay visible for monitoring
 - archive or collapse resolved items when they stop mattering
+- use this page for review/audit/check items, not progress journaling
 
 ## Progress Rule
 
@@ -110,6 +124,23 @@ Keep dashboard text short.
 - summary first
 - details by link
 - latest valid state only
+
+## Routing Boundary
+
+Project hubs are for project-scoped state only.
+
+- send shared ops, `.orchestra`, NAS, launchd, or cross-repo automation updates to `ops log`
+- send project focus, blockers, reports, and checks to the matching project hub
+- when the route is ambiguous, prefer `ops` for shared infrastructure and `project` for product/workstream state
+
+## Local-First Rollout Rule
+
+Until auth and page IDs are ready everywhere:
+
+- keep the same dashboard structure locally first
+- allow project notes to remain `notion_sync: not_configured`
+- do not treat missing page IDs as a sync error
+- run live sync only in a dedicated follow-up session
 
 ## Rollout Note
 

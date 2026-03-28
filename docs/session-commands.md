@@ -103,6 +103,14 @@ SESSION_FINISH_WORK_NOTE_CMD="..."
 
 These override the shared default helper when a repo needs custom behavior.
 
+Optional dirty-status ignore patterns:
+
+```bash
+SESSION_DIRTY_IGNORE_PATTERNS=$'path/to/local-override\nanother/path'
+```
+
+Use this only for known local-only overrides that should not block `session-start`.
+
 Current local defaults:
 
 - `~/developer/projects/ai-workspace/.sessionrc`

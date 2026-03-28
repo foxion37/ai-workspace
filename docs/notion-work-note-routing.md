@@ -2,6 +2,17 @@
 
 This document defines where work notes should be written in Notion.
 
+## Operating Contract
+
+The current operating contract is:
+
+- work-note routing is `ops` or `project`
+- `ops` is for shared operating changes and cross-repo infrastructure
+- `project` is for one project hub only
+- local Markdown stays canonical
+- Notion stays secondary until auth and page IDs are ready
+- this session locks the rules only; live sync happens in a later session
+
 ## Core Rule
 
 Do not treat Notion as a session log sink.
@@ -21,6 +32,12 @@ Raw logs stay in their original paths.
 Long explanations stay in local incident or work-note Markdown.
 
 ## Routing Rule
+
+Route by ownership first, not by where the work happened.
+
+- if the change affects shared policy, automation, `.orchestra`, home ops, or more than one repo, route to `ops`
+- if the change stays inside one project's active status surface, route to that project's hub
+- if a repo lives under `developer/projects` but is still missing a wired hub, keep the route as project-scoped and leave sync unconfigured
 
 ### `ops log`
 
@@ -81,6 +98,13 @@ Required dashboard fields:
 - References
 - Next Step
 
+Operational meaning:
+
+- `current` is the live status surface
+- `reports` holds dated snapshots only
+- `check log` holds checks, reviews, warnings, and follow-up items
+- raw logs stay local and are linked, not pasted
+
 ## Automation Rule
 
 Automatic recording follows the same routing logic.
@@ -95,6 +119,31 @@ Direct API sync is opt-in for now.
 - queue only when the route has a real parent page ID
 - if the project hub is not wired yet, keep `notion_sync: not_configured`
 - use manual `session_work_note.py sync` after `NOTION_API_KEY` and page IDs are ready
+
+## Queue And Sync Contract
+
+`session_work_note.py` currently uses these states:
+
+- `pending`: the local work note exists and a Notion payload is queued
+- `not_configured`: the local work note exists but the route has no usable parent page ID yet
+- `synced`: a queued payload was pushed successfully
+
+Rules:
+
+- `queue-status` is the inspection command before a real sync session
+- `sync` is manual and should run only after `NOTION_API_KEY` and required page IDs are ready
+- failed sync attempts must leave the local work note intact and keep the queue entry for retry
+- `not_configured` items are not queue failures; they are rollout-incomplete routes
+- do not bulk backfill Notion until the route and dashboard standard are already fixed locally
+
+## Local-First Principle
+
+Use `local-first / Notion-second` as the default rule.
+
+- write the full state to local Markdown first
+- use Notion for a short dashboard-safe mirror only
+- keep incidents, long logs, and raw reports in local files
+- treat Notion as a readable coordination layer, not the system of record
 
 If Notion sync fails:
 

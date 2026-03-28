@@ -87,7 +87,18 @@ def save_ledger(data: dict[str, Any]) -> None:
 
 
 def load_queue() -> list[dict[str, Any]]:
-    return load_json(QUEUE_PATH, [])
+    data = load_json(QUEUE_PATH, [])
+    if isinstance(data, list) and all(isinstance(item, dict) for item in data):
+        return data
+    # Recover from an earlier malformed save where (queue, errors) was serialized.
+    if (
+        isinstance(data, list)
+        and len(data) == 2
+        and isinstance(data[0], list)
+        and all(isinstance(item, dict) for item in data[0])
+    ):
+        return data[0]
+    return []
 
 
 def save_queue(data: list[dict[str, Any]]) -> None:
@@ -286,10 +297,15 @@ def load_env_from_known_files() -> None:
                 if not stripped or stripped.startswith("#") or "=" not in stripped:
                     continue
                 key, value = stripped.split("=", 1)
+                key = key.strip()
+                if key.startswith("export "):
+                    key = key[len("export ") :].strip()
                 if key and key not in os.environ:
                     os.environ[key] = value.strip().strip('"').strip("'")
         except OSError:
             continue
+    if "NOTION_API_KEY" not in os.environ and "NOTION_AGENT_TOKEN" in os.environ:
+        os.environ["NOTION_API_KEY"] = os.environ["NOTION_AGENT_TOKEN"]
 
 
 def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
@@ -482,14 +498,15 @@ def build_notion_markdown(note: dict[str, Any]) -> str:
     )
 
 
-def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> list[dict[str, Any]]:
+def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> tuple[list[dict[str, Any]], list[str]]:
     if not queue:
-        return []
+        return [], []
     load_env_from_known_files()
     if dry_run or not os.environ.get("NOTION_API_KEY"):
-        return queue
+        return queue, []
 
     remaining: list[dict[str, Any]] = []
+    errors: list[str] = []
     for item in queue:
         try:
             page = notion_request(
@@ -516,9 +533,20 @@ def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> list[dict[str, Any
                     f"https://api.notion.com/v1/blocks/{page_id}/children",
                     {"children": blocks[:80]},
                 )
-        except (RuntimeError, error.HTTPError, error.URLError, KeyError):
+        except RuntimeError as exc:
             remaining.append(item)
-    return remaining
+            errors.append(f"{item['title']}: {exc}")
+        except error.HTTPError as exc:
+            remaining.append(item)
+            try:
+                message = exc.read().decode("utf-8")
+            except OSError:
+                message = str(exc)
+            errors.append(f"{item['title']}: HTTP {exc.code} {message[:240]}")
+        except (error.URLError, KeyError) as exc:
+            remaining.append(item)
+            errors.append(f"{item['title']}: {exc}")
+    return remaining, errors
 
 
 def queue_summary_lines(queue: list[dict[str, Any]]) -> list[str]:
@@ -599,7 +627,7 @@ def upsert_note(
     enqueue_notion_sync(queue, note, route)
     if not dry_run:
         note_path = write_note(note, ledger)
-        remaining_queue = sync_queue(queue, dry_run=False)
+        remaining_queue, _sync_errors = sync_queue(queue, dry_run=False)
         note["notion_sync"] = "synced" if len(remaining_queue) < len(queue) and not remaining_queue else note["notion_sync"]
         write_note(note, ledger)
         save_ledger(ledger)
@@ -842,7 +870,7 @@ def command_sync(args: argparse.Namespace) -> int:
 
     load_env_from_known_files()
     has_api_key = bool(os.environ.get("NOTION_API_KEY"))
-    remaining_queue = sync_queue(queue, dry_run=args.dry_run)
+    remaining_queue, sync_errors = sync_queue(queue, dry_run=args.dry_run)
     synced = len(queue) - len(remaining_queue)
 
     lines = [
@@ -852,6 +880,8 @@ def command_sync(args: argparse.Namespace) -> int:
         lines.append("[mode] dry-run")
     elif not has_api_key:
         lines.append("[status] waiting_for_api_key")
+    for sync_error in sync_errors[:5]:
+        lines.append(f"[error] {sync_error}")
 
     lines.extend(queue_summary_lines(remaining_queue))
 
