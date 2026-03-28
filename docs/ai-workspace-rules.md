@@ -1,7 +1,7 @@
 # AI Workspace Rules
 
-This document is the shared operating rule for Claude, Codex, and Gemini.
-It is written to survive a merge with the local Mac mini rule document.
+This document is the top-level policy for storage, sync, and secret handling.
+Keep exact path decisions in `docs/sync-matrix.md` and machine-specific facts in `docs/machines/`.
 
 ## 1. Source of Truth
 
@@ -14,14 +14,11 @@ It is written to survive a merge with the local Mac mini rule document.
 
 Use these documents in this order:
 
-1. `README.md` for the entry point.
-2. `docs/ai-workspace-rules.md` for the top-level policy.
-3. `docs/storage-map.md` for the file placement table.
-4. `docs/workspace-structure.md` for the structure diagram.
-5. `docs/folder-governance.md` for folders outside the workspace root.
-6. `docs/tool-and-db-governance.md` for non-code assets such as DBs, docs, and tool state.
-7. `docs/runbook.md` for the operating sequence.
-8. `docs/decision-log.md` for the rationale.
+1. `docs/README.md` for the document map.
+2. `docs/ai-workspace-rules.md` for top-level policy.
+3. `docs/sync-matrix.md` for tracked, template-only, and local-only paths.
+4. `docs/session-commands.md` for session automation behavior.
+5. `docs/home-root/AGENTS.md` for home-root operating rules.
 
 ## 3. Storage Policy
 
@@ -42,6 +39,8 @@ Use these documents in this order:
 - Templates
 - Non-secret config files
 - Documentation that describes the workflow
+
+GitHub is the shared baseline for reusable structure only. Do not use it to move local-only machine state between Macs.
 
 ### Keep in NAS
 
@@ -72,16 +71,7 @@ Use these documents in this order:
 - If a file or rule is ambiguous, do not invent a new meaning.
 - When multiple agents read the same rule, they must be able to follow it without extra context.
 
-## 6. Merge Rule for the Mac mini Local Document
-
-When this document is combined with the local Mac mini rule file:
-
-- The local Mac mini document may override machine-specific details.
-- This document keeps the top-level policy for storage, secrets, and sync.
-- If the two documents conflict on a machine-specific path, prefer the local path rule.
-- If the two documents conflict on a storage or secret policy, prefer this document.
-
-## 7. Operational Flow
+## 6. Operational Flow
 
 1. Work on the Mac mini.
 2. Save working data to iCloud when it is meant to sync.
@@ -89,7 +79,7 @@ When this document is combined with the local Mac mini rule file:
 4. Push a backup copy to NAS on a schedule.
 5. Never treat the NAS copy as the active working copy.
 
-## 8. Practical Defaults
+## 7. Practical Defaults
 
 - Apple ecosystem is the default security layer.
 - GitHub is the source for versioned structure and code.

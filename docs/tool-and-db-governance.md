@@ -1,6 +1,7 @@
 # Tool And DB Governance
 
 This document defines how non-code assets should be managed.
+Use `docs/sync-matrix.md` as the exact path-level source of truth for tracked, template-only, and local-only files.
 
 ## Core Principle
 
@@ -29,6 +30,15 @@ Policy:
 - Large raw source files may stay outside the repo but should be indexed by document rules.
 - Do not commit bulky source files to GitHub by default.
 - Back them up to NAS.
+- Keep incident reports as local Markdown summaries that link raw evidence rather than copying it.
+
+Incident reporting rule:
+
+- raw logs stay in their original producer paths
+- incident reports live in `AI-Workspace/knowledge-db/incidents/`
+- Notion mirrors selected incident metadata for dashboards and queries
+- incident reports are the primary human and agent entry point for operational issues
+- work notes stay short and route to either `ops log` or the matching project hub
 
 Folder-specific decisions:
 
@@ -64,6 +74,30 @@ Tool install rule:
 
 - Use `developer/tools/` for agent-managed AI tool helpers, local utility repos, wrappers, and install scripts.
 - Use `Applications` or `~/Applications` for standard macOS GUI app installs.
+
+AI tool retention rule:
+
+- keep the default coding stack small
+- keep Codex and GSD as the primary engineering path
+- keep Claude-side plugins and MCP only in limited-use mode when they have a clear review, synthesis, messaging, or utility role
+- defer installation of overlapping orchestration frameworks by default
+
+Current operating decision:
+
+- keep: Codex, GSD
+- limited keep: SCC, Telegram, Notion, selected Claude-side plugins and MCP utilities
+- defer: MoAI-ADK
+
+Rationale:
+
+- MoAI-ADK overlaps heavily with both GSD and SCC in orchestration, state, and workflow coverage
+- installing it into the default environment would likely increase operator and token overhead before it adds unique value
+
+Future cleanup rule:
+
+- if a retained plugin, package, skill set, or MCP server sees sustained low usage, treat it as a removal candidate
+- disable first, then remove after confirming no material workflow loss
+- prefer fewer active orchestration layers over broader tool coverage
 
 Git sync baseline for reusable config:
 
@@ -124,6 +158,11 @@ Policy:
 - Do not store runtime DBs in GitHub.
 - Include them in backup only if operational recovery requires them.
 - Treat them as `ignore` or `backup`, not `adopt`.
+
+Operational incident exception:
+
+- runtime DBs and logs may be referenced from incident reports as evidence
+- referencing a runtime artifact does not change its storage classification
 
 ## 4. Secrets
 

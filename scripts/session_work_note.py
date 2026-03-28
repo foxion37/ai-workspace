@@ -1,0 +1,845 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+from urllib import error, request
+
+ROOT = Path("/Users/barq")
+ORCHESTRA_DIR = ROOT / ".orchestra"
+WORK_NOTES_DIR = ORCHESTRA_DIR / "work-notes"
+STATE_DIR = ORCHESTRA_DIR / "state"
+LEDGER_PATH = STATE_DIR / "work-note-ledger.json"
+QUEUE_PATH = STATE_DIR / "notion-sync-queue.json"
+CONFIG_PATH = ROOT / "developer/projects/ai-workspace/config/notion_work_note_targets.json"
+INCIDENT_DIR = ROOT / "AI-Workspace/knowledge-db/incidents"
+TASK_DIR = ORCHESTRA_DIR / "tasks"
+REPORT_ROOT = ROOT / "developer/home-dev-infra/reports"
+SUMMARY_PATH = ORCHESTRA_DIR / "context/summary.md"
+
+IMPORTANT_TASK_STATUSES = {"blocked", "done", "self_review", "claude_review"}
+OPEN_INCIDENT_STATUSES = {"open", "investigating", "blocked", "monitoring"}
+
+
+@dataclass
+class RouteInfo:
+    kind: str
+    scope_slug: str
+    scope_title: str
+    notion_target: str
+    ops_parent_page_id: str | None = None
+    project_hub_page_id: str | None = None
+    dashboard_page_id: str | None = None
+    reports_page_id: str | None = None
+    check_log_page_id: str | None = None
+
+
+def now_kst() -> datetime:
+    return datetime.now().astimezone()
+
+
+def iso_now() -> str:
+    return now_kst().isoformat(timespec="seconds")
+
+
+def display_now() -> str:
+    return now_kst().strftime("%Y-%m-%d %H:%M %Z")
+
+
+def ensure_runtime_dirs() -> None:
+    WORK_NOTES_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def load_json(path: Path, default: Any) -> Any:
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return default
+
+
+def save_json(path: Path, data: Any) -> None:
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=True, sort_keys=True) + "\n")
+
+
+def load_config() -> dict[str, Any]:
+    return load_json(CONFIG_PATH, {})
+
+
+def load_ledger() -> dict[str, Any]:
+    default = {"notes": {}, "watch": {"tasks": {}, "incidents": {}, "reports": {}}}
+    return load_json(LEDGER_PATH, default)
+
+
+def save_ledger(data: dict[str, Any]) -> None:
+    save_json(LEDGER_PATH, data)
+
+
+def load_queue() -> list[dict[str, Any]]:
+    return load_json(QUEUE_PATH, [])
+
+
+def save_queue(data: list[dict[str, Any]]) -> None:
+    save_json(QUEUE_PATH, data)
+
+
+def slugify(text: str) -> str:
+    lowered = text.lower()
+    chars = []
+    for ch in lowered:
+        if ch.isalnum():
+            chars.append(ch)
+        elif ch in {" ", "-", "_", "/"}:
+            chars.append("-")
+    slug = "".join(chars).strip("-")
+    while "--" in slug:
+        slug = slug.replace("--", "-")
+    return slug or "note"
+
+
+def run_git(args: list[str], repo_root: Path, check: bool = True) -> str:
+    proc = subprocess.run(
+        ["git", "-C", str(repo_root), *args],
+        check=check,
+        capture_output=True,
+        text=True,
+    )
+    return proc.stdout.strip()
+
+
+def detect_repo_root(cwd: Path) -> Path | None:
+    current = cwd.resolve()
+    while True:
+        if (current / ".git").exists():
+            return current
+        if current == current.parent:
+            return None
+        current = current.parent
+
+
+def parse_simple_frontmatter(path: Path) -> dict[str, Any]:
+    text = path.read_text()
+    if not text.startswith("---\n"):
+        return {}
+    data: dict[str, Any] = {}
+    current_key: str | None = None
+    current_list: list[str] | None = None
+    for line in text.splitlines()[1:]:
+        if line.strip() == "---":
+            break
+        if line.startswith("  - ") and current_key and current_list is not None:
+            current_list.append(line[4:].strip())
+            continue
+        if ": " in line:
+            key, value = line.split(": ", 1)
+            current_key = key.strip()
+            current_list = None
+            if value.strip() == "":
+                current_list = []
+                data[current_key] = current_list
+            else:
+                data[current_key] = value.strip()
+        elif line.endswith(":"):
+            current_key = line[:-1].strip()
+            current_list = []
+            data[current_key] = current_list
+    return data
+
+
+def parse_task(path: Path) -> dict[str, Any]:
+    text = path.read_text()
+    status = "unknown"
+    title = path.stem
+    checklist_total = 0
+    checklist_done = 0
+    for line in text.splitlines():
+        if line.startswith("# "):
+            title = line[2:].strip()
+        if line.startswith("- **Status**:"):
+            status = line.split(":", 1)[1].strip()
+        if line.lstrip().startswith("- ["):
+            checklist_total += 1
+            if line.lstrip().startswith("- [x]"):
+                checklist_done += 1
+    return {
+        "path": str(path),
+        "title": title,
+        "status": status,
+        "checklist_total": checklist_total,
+        "checklist_done": checklist_done,
+    }
+
+
+def parse_incident(path: Path) -> dict[str, Any]:
+    fm = parse_simple_frontmatter(path)
+    return {
+        "path": str(path),
+        "title": fm.get("title", path.stem),
+        "status": fm.get("status", "open"),
+        "summary": fm.get("summary", ""),
+        "related_tasks": fm.get("related_tasks", []) or [],
+        "system": fm.get("system", []) or [],
+    }
+
+
+def iter_real_incident_files() -> list[Path]:
+    excluded = {"INDEX.md", "TEMPLATE.md", "TAXONOMY.md"}
+    paths: list[Path] = []
+    if not INCIDENT_DIR.exists():
+        return paths
+    for path in sorted(INCIDENT_DIR.glob("*.md")):
+        if path.name in excluded:
+            continue
+        fm = parse_simple_frontmatter(path)
+        if not fm.get("id"):
+            continue
+        paths.append(path)
+    return paths
+
+
+def parse_report_status(path: Path) -> tuple[str, str]:
+    try:
+        text = path.read_text().lower()
+    except OSError:
+        return "missing", "report unreadable"
+    for line in path.read_text().splitlines():
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#"):
+            summary = stripped
+            break
+    else:
+        summary = path.name
+    if "status: success" in text or "result: success" in text:
+        return "success", summary
+    if "status: failed" in text or "failure" in text or "failed" in text or "blocked" in text:
+        return "failed", summary
+    if "warning" in text or "warn" in text:
+        return "warning", summary
+    return "info", summary
+
+
+def find_related_tasks(repo_root: Path | None) -> list[dict[str, Any]]:
+    if not TASK_DIR.exists():
+        return []
+    matches = []
+    repo_name = repo_root.name if repo_root else ""
+    repo_path = str(repo_root) if repo_root else ""
+    for path in sorted(TASK_DIR.glob("*.md")):
+        text = path.read_text()
+        if repo_name and repo_name in text or repo_path and repo_path in text:
+            matches.append(parse_task(path))
+    return matches
+
+
+def find_related_incidents(repo_root: Path | None) -> list[dict[str, Any]]:
+    matches = []
+    repo_name = repo_root.name if repo_root else ""
+    repo_path = str(repo_root) if repo_root else ""
+    for path in iter_real_incident_files():
+        text = path.read_text()
+        if repo_name and repo_name in text or repo_path and repo_path in text:
+            matches.append(parse_incident(path))
+    return matches
+
+
+def checklist_progress(tasks: list[dict[str, Any]]) -> int | None:
+    total = sum(task["checklist_total"] for task in tasks)
+    done = sum(task["checklist_done"] for task in tasks)
+    if total <= 0:
+        return None
+    return int((done / total) * 100)
+
+
+def summarize_open_issues(tasks: list[dict[str, Any]], incidents: list[dict[str, Any]]) -> list[str]:
+    issues: list[str] = []
+    for task in tasks:
+        if task["status"] == "blocked":
+            issues.append(f"Blocked task: {task['title']} ({task['path']})")
+    for incident in incidents:
+        if incident["status"] in OPEN_INCIDENT_STATUSES:
+            issues.append(f"{incident['status']}: {incident['title']} ({incident['path']})")
+    return issues[:5]
+
+
+def load_env_from_known_files() -> None:
+    candidates = [
+        ROOT / ".dotfiles/.env",
+        ROOT / "developer/notion-auto-sync/.env",
+    ]
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            for line in path.read_text().splitlines():
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#") or "=" not in stripped:
+                    continue
+                key, value = stripped.split("=", 1)
+                if key and key not in os.environ:
+                    os.environ[key] = value.strip().strip('"').strip("'")
+        except OSError:
+            continue
+
+
+def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
+    repo_overrides = config.get("repo_overrides", {})
+    projects = config.get("projects", {})
+    ops = config.get("ops", {})
+
+    if repo_root is None:
+        return RouteInfo(
+            kind="ops",
+            scope_slug="global",
+            scope_title="global",
+            notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+            ops_parent_page_id=ops.get("page_id"),
+        )
+
+    repo_name = repo_root.name
+    override = repo_overrides.get(repo_name)
+    if override == "ops":
+        return RouteInfo(
+            kind="ops",
+            scope_slug=slugify(repo_name),
+            scope_title=repo_name,
+            notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+            ops_parent_page_id=ops.get("page_id"),
+        )
+
+    project = projects.get(repo_name)
+    if project:
+        return RouteInfo(
+            kind="project",
+            scope_slug=slugify(repo_name),
+            scope_title=project.get("title", repo_name),
+            notion_target=project.get("route", f"dashboard > developer > {repo_name}"),
+            project_hub_page_id=project.get("hub_page_id"),
+            dashboard_page_id=project.get("dashboard_page_id"),
+            reports_page_id=project.get("reports_page_id"),
+            check_log_page_id=project.get("check_log_page_id"),
+        )
+
+    if str(repo_root).startswith(str(ROOT / "developer/projects/")):
+        return RouteInfo(
+            kind="project",
+            scope_slug=slugify(repo_name),
+            scope_title=repo_name,
+            notion_target=f"dashboard > developer > {repo_name}",
+        )
+
+    return RouteInfo(
+        kind="ops",
+        scope_slug=slugify(repo_name),
+        scope_title=repo_name,
+        notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+        ops_parent_page_id=ops.get("page_id"),
+    )
+
+
+def render_work_note(note: dict[str, Any]) -> str:
+    def list_block(items: list[str]) -> str:
+        if not items:
+            return "  -\n"
+        return "".join(f"  - {item}\n" for item in items)
+
+    lines = [
+        "---",
+        f"id: {note['id']}",
+        f"type: {note['type']}",
+        f"status: {note['status']}",
+        f"scope: {note['scope']}",
+        f"repo: {note.get('repo', '')}",
+        f"date_opened: {note['date_opened']}",
+        f"date_updated: {note['date_updated']}",
+        f"summary: {note['summary']}",
+        "related_tasks:",
+        list_block(note.get("related_tasks", [])),
+        "related_incidents:",
+        list_block(note.get("related_incidents", [])),
+        "local_refs:",
+        list_block(note.get("local_refs", [])),
+        f"notion_target: {note['notion_target']}",
+        f"notion_sync: {note['notion_sync']}",
+        "---",
+        "",
+        f"# {note['title']}",
+        "",
+        "## Situation",
+        f"- {note['situation']}",
+        "",
+        "## What Changed",
+    ]
+    lines.extend(f"- {item}" for item in note.get("changes", []))
+    lines.extend(
+        [
+            "",
+            "## Why It Matters",
+        ]
+    )
+    lines.extend(f"- {item}" for item in note.get("why_it_matters", []))
+    lines.extend(
+        [
+            "",
+            "## References",
+        ]
+    )
+    lines.extend(f"- {item}" for item in note.get("local_refs", []))
+    lines.extend(
+        [
+            "",
+            "## Next Step",
+            f"- {note['next_step']}",
+            "",
+        ]
+    )
+    return "\n".join(lines).replace("\n  -\n", "\n")
+
+
+def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route: RouteInfo) -> None:
+    parent_id = route.ops_parent_page_id if route.kind == "ops" else route.reports_page_id
+    if not parent_id:
+        note["notion_sync"] = "pending"
+        return
+    payload = {
+        "note_id": note["id"],
+        "kind": route.kind,
+        "title": note["title"],
+        "parent_page_id": parent_id,
+        "content_markdown": build_notion_markdown(note),
+        "dashboard_page_id": route.dashboard_page_id,
+        "notion_target": route.notion_target,
+        "updated_at": note["date_updated"],
+    }
+    fingerprint = hashlib.sha1(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
+    if any(item.get("fingerprint") == fingerprint for item in queue):
+        return
+    payload["fingerprint"] = fingerprint
+    queue.append(payload)
+    note["notion_sync"] = "pending"
+
+
+def notion_request(method: str, url: str, body: dict[str, Any]) -> dict[str, Any]:
+    token = os.environ.get("NOTION_API_KEY")
+    if not token:
+        raise RuntimeError("NOTION_API_KEY missing")
+    req = request.Request(
+        url,
+        data=json.dumps(body).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Notion-Version": "2022-06-28",
+            "Content-Type": "application/json",
+        },
+        method=method,
+    )
+    with request.urlopen(req, timeout=30) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def build_paragraph_block(text: str) -> dict[str, Any]:
+    return {
+        "object": "block",
+        "type": "paragraph",
+        "paragraph": {
+            "rich_text": [{"type": "text", "text": {"content": text[:1900]}}],
+        },
+    }
+
+
+def build_notion_markdown(note: dict[str, Any]) -> str:
+    refs = "\n".join(f"- {item}" for item in note.get("local_refs", [])[:3]) or "- none"
+    changes = "\n".join(f"- {item}" for item in note.get("changes", [])[-5:]) or "- none"
+    issues = "\n".join(f"- {item}" for item in note.get("why_it_matters", [])[:3]) or "- none"
+    return (
+        f"## Status\n- {note['status']}\n\n"
+        f"## Situation\n- {note['situation']}\n\n"
+        f"## Changes\n{changes}\n\n"
+        f"## Why It Matters\n{issues}\n\n"
+        f"## References\n{refs}\n\n"
+        f"## Next\n- {note['next_step']}\n"
+    )
+
+
+def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> list[dict[str, Any]]:
+    if not queue:
+        return []
+    load_env_from_known_files()
+    if dry_run or not os.environ.get("NOTION_API_KEY"):
+        return queue
+
+    remaining: list[dict[str, Any]] = []
+    for item in queue:
+        try:
+            page = notion_request(
+                "POST",
+                "https://api.notion.com/v1/pages",
+                {
+                    "parent": {"page_id": item["parent_page_id"]},
+                    "properties": {
+                        "title": {
+                            "title": [{"type": "text", "text": {"content": item["title"][:180]}}]
+                        }
+                    },
+                },
+            )
+            page_id = page["id"]
+            blocks = [
+                build_paragraph_block(line)
+                for line in item["content_markdown"].splitlines()
+                if line.strip()
+            ]
+            if blocks:
+                notion_request(
+                    "PATCH",
+                    f"https://api.notion.com/v1/blocks/{page_id}/children",
+                    {"children": blocks[:80]},
+                )
+        except (RuntimeError, error.HTTPError, error.URLError, KeyError):
+            remaining.append(item)
+    return remaining
+
+
+def write_note(note: dict[str, Any], ledger: dict[str, Any]) -> Path:
+    note_path = WORK_NOTES_DIR / f"{note['id']}.md"
+    note_path.write_text(render_work_note(note))
+    ledger.setdefault("notes", {})[note["id"]] = note
+    return note_path
+
+
+def upsert_note(
+    *,
+    route: RouteInfo,
+    repo_path: str,
+    status: str,
+    summary: str,
+    situation: str,
+    changes: list[str],
+    why_it_matters: list[str],
+    refs: list[str],
+    next_step: str,
+    related_tasks: list[str],
+    related_incidents: list[str],
+    dry_run: bool,
+) -> tuple[dict[str, Any], Path | None]:
+    ensure_runtime_dirs()
+    ledger = load_ledger()
+    queue = load_queue()
+    day = now_kst().strftime("%Y-%m-%d")
+    note_id = f"{day}__{route.kind}__{route.scope_slug}"
+    note = ledger.setdefault("notes", {}).get(note_id)
+    if not note:
+        note = {
+            "id": note_id,
+            "type": f"{route.kind}_note",
+            "title": f"{day} | {route.scope_title} | work note",
+            "status": status,
+            "scope": route.scope_title,
+            "repo": repo_path,
+            "date_opened": iso_now(),
+            "date_updated": iso_now(),
+            "summary": summary,
+            "related_tasks": [],
+            "related_incidents": [],
+            "local_refs": [],
+            "notion_target": route.notion_target,
+            "notion_sync": "pending",
+            "situation": situation,
+            "changes": [],
+            "why_it_matters": [],
+            "next_step": next_step,
+        }
+    note["status"] = status
+    note["repo"] = repo_path
+    note["date_updated"] = iso_now()
+    note["summary"] = summary
+    note["situation"] = situation
+    note["next_step"] = next_step
+    note["changes"] = list(dict.fromkeys(note.get("changes", []) + changes))[-10:]
+    note["why_it_matters"] = list(dict.fromkeys(note.get("why_it_matters", []) + why_it_matters))[-6:]
+    note["local_refs"] = list(dict.fromkeys(note.get("local_refs", []) + refs))[:10]
+    note["related_tasks"] = list(dict.fromkeys(note.get("related_tasks", []) + related_tasks))[:10]
+    note["related_incidents"] = list(dict.fromkeys(note.get("related_incidents", []) + related_incidents))[:10]
+    enqueue_notion_sync(queue, note, route)
+    if not dry_run:
+        note_path = write_note(note, ledger)
+        remaining_queue = sync_queue(queue, dry_run=False)
+        note["notion_sync"] = "synced" if len(remaining_queue) < len(queue) and not remaining_queue else note["notion_sync"]
+        write_note(note, ledger)
+        save_ledger(ledger)
+        save_queue(remaining_queue)
+        return note, note_path
+    return note, None
+
+
+def default_next_step(route: RouteInfo, tasks: list[dict[str, Any]], incidents: list[dict[str, Any]]) -> str:
+    for task in tasks:
+        if task["status"] == "blocked":
+            return f"Unblock task: {task['title']}"
+    for incident in incidents:
+        if incident["status"] in OPEN_INCIDENT_STATUSES:
+            return f"Review incident: {incident['title']}"
+    if route.kind == "project":
+        return "Update the dashboard current page and keep reports/check log in sync."
+    return "Review ops log and pending incidents."
+
+
+def command_context(args: argparse.Namespace) -> int:
+    ensure_runtime_dirs()
+    cwd = Path(args.cwd or os.getcwd())
+    repo_root = Path(args.repo_root) if args.repo_root else detect_repo_root(cwd)
+    ledger = load_ledger()
+    route = route_for_repo(repo_root, load_config())
+    tasks = find_related_tasks(repo_root)
+    incidents = find_related_incidents(repo_root)
+    blocked = [task for task in tasks if task["status"] == "blocked"]
+    latest_note = None
+    note_prefix = f"{now_kst().strftime('%Y-%m-%d')}__{route.kind}__{route.scope_slug}"
+    latest_note = ledger.get("notes", {}).get(note_prefix)
+    lines = [
+        f"[scope] {route.scope_title} -> {route.notion_target}",
+        f"[tasks] related={len(tasks)} blocked={len(blocked)}",
+        f"[incidents] open={len([i for i in incidents if i['status'] in OPEN_INCIDENT_STATUSES])}",
+    ]
+    progress = checklist_progress(tasks)
+    if progress is not None:
+        lines.append(f"[progress] {progress}% from checklist")
+    if latest_note:
+        lines.append(f"[latest-note] {latest_note['summary']}")
+    for issue in summarize_open_issues(tasks, incidents)[:3]:
+        lines.append(f"[issue] {issue}")
+    if SUMMARY_PATH.exists():
+        lines.append(f"[summary] {SUMMARY_PATH}")
+    print("\n".join(lines))
+    return 0
+
+
+def command_record(args: argparse.Namespace) -> int:
+    cwd = Path(args.cwd or os.getcwd())
+    repo_root = Path(args.repo_root) if args.repo_root else detect_repo_root(cwd)
+    route = route_for_repo(repo_root, load_config())
+    tasks = find_related_tasks(repo_root)
+    incidents = find_related_incidents(repo_root)
+    changes: list[str] = []
+    refs: list[str] = []
+    summary = args.summary
+    situation = args.situation
+
+    if repo_root:
+        try:
+            commit_subject = run_git(["log", "-1", "--pretty=%s"], repo_root)
+            commit_hash = run_git(["rev-parse", "--short", "HEAD"], repo_root)
+            changed_files = [
+                line
+                for line in run_git(["show", "--name-only", "--format=", "HEAD"], repo_root).splitlines()
+                if line.strip()
+            ]
+            summary = summary or f"{repo_root.name}: {commit_subject}"
+            situation = situation or f"{repo_root.name} 작업 상태가 {args.mode} 단계에서 정리됐다."
+            changes.append(f"{display_now()} commit {commit_hash}: {commit_subject}")
+            refs.extend(str(repo_root / path) for path in changed_files[:5])
+        except subprocess.CalledProcessError:
+            summary = summary or f"{route.scope_title}: work note update"
+            situation = situation or f"{route.scope_title}의 현재 상태를 기록했다."
+    else:
+        summary = summary or f"{route.scope_title}: work note update"
+        situation = situation or f"{route.scope_title}의 현재 상태를 기록했다."
+
+    changes.extend(args.change or [])
+    refs.extend(args.ref or [])
+    related_tasks = [task["path"] for task in tasks[:5]]
+    related_incidents = [incident["path"] for incident in incidents[:5]]
+    why_it_matters = summarize_open_issues(tasks, incidents) or [
+        "다음 세션에서 현재 상태를 빠르게 복원할 수 있게 한다."
+    ]
+    next_step = args.next_step or default_next_step(route, tasks, incidents)
+    note, note_path = upsert_note(
+        route=route,
+        repo_path=str(repo_root) if repo_root else "",
+        status=args.status,
+        summary=summary,
+        situation=situation,
+        changes=changes,
+        why_it_matters=why_it_matters,
+        refs=list(dict.fromkeys(refs)),
+        next_step=next_step,
+        related_tasks=related_tasks,
+        related_incidents=related_incidents,
+        dry_run=args.dry_run,
+    )
+    if args.dry_run:
+        print(json.dumps(note, ensure_ascii=False, indent=2))
+    else:
+        print(note_path)
+    return 0
+
+
+def record_watch_event(
+    *,
+    route: RouteInfo,
+    status: str,
+    summary: str,
+    situation: str,
+    ref_path: str,
+    next_step: str,
+    dry_run: bool,
+) -> None:
+    upsert_note(
+        route=route,
+        repo_path="",
+        status=status,
+        summary=summary,
+        situation=situation,
+        changes=[f"{display_now()} detected: {summary}"],
+        why_it_matters=[situation],
+        refs=[ref_path],
+        next_step=next_step,
+        related_tasks=[],
+        related_incidents=[],
+        dry_run=dry_run,
+    )
+
+
+def watch_once(dry_run: bool, quiet: bool) -> int:
+    ensure_runtime_dirs()
+    ledger = load_ledger()
+    config = load_config()
+    watch_state = ledger.setdefault("watch", {"tasks": {}, "incidents": {}, "reports": {}})
+
+    for path in sorted(TASK_DIR.glob("*.md")):
+        task = parse_task(path)
+        previous = watch_state["tasks"].get(str(path))
+        current = {"status": task["status"], "mtime": path.stat().st_mtime}
+        if previous is None:
+            watch_state["tasks"][str(path)] = current
+            continue
+        if previous != current:
+            watch_state["tasks"][str(path)] = current
+            if task["status"] in IMPORTANT_TASK_STATUSES:
+                route = route_for_repo(None, config)
+                record_watch_event(
+                    route=route,
+                    status=task["status"],
+                    summary=f"Task state changed: {task['title']} -> {task['status']}",
+                    situation="중요 task 상태 전환이 발생했다.",
+                    ref_path=str(path),
+                    next_step=f"Review task status: {path}",
+                    dry_run=dry_run,
+                )
+                if not quiet:
+                    print(f"[task] {path} -> {task['status']}")
+
+    for path in iter_real_incident_files():
+        incident = parse_incident(path)
+        previous = watch_state["incidents"].get(str(path))
+        current = {"status": incident["status"], "mtime": path.stat().st_mtime}
+        if previous is None:
+            watch_state["incidents"][str(path)] = current
+            continue
+        if previous != current:
+            watch_state["incidents"][str(path)] = current
+            route = route_for_repo(None, config)
+            record_watch_event(
+                route=route,
+                status=incident["status"],
+                summary=f"Incident updated: {incident['title']} -> {incident['status']}",
+                situation="반복 확인이 필요한 incident 상태가 바뀌었다.",
+                ref_path=str(path),
+                next_step=f"Review incident: {path}",
+                dry_run=dry_run,
+            )
+            if not quiet:
+                print(f"[incident] {path} -> {incident['status']}")
+
+    for path in sorted(REPORT_ROOT.glob("**/latest.md")):
+        report_status, report_summary = parse_report_status(path)
+        previous = watch_state["reports"].get(str(path))
+        current = {"status": report_status, "mtime": path.stat().st_mtime}
+        if previous is None:
+            watch_state["reports"][str(path)] = current
+            continue
+        if previous != current:
+            watch_state["reports"][str(path)] = current
+            if previous.get("status") != report_status or report_status in {"failed", "warning"}:
+                route = route_for_repo(ROOT / "developer/home-dev-infra", config)
+                record_watch_event(
+                    route=route,
+                    status=report_status,
+                    summary=f"Report changed: {path.parent.name}/latest.md -> {report_status}",
+                    situation=report_summary,
+                    ref_path=str(path),
+                    next_step=f"Check latest report: {path}",
+                    dry_run=dry_run,
+                )
+                if not quiet:
+                    print(f"[report] {path} -> {report_status}")
+
+    if not dry_run:
+        save_ledger(ledger)
+    return 0
+
+
+def command_watch_once(args: argparse.Namespace) -> int:
+    return watch_once(dry_run=args.dry_run, quiet=args.quiet)
+
+
+def command_watch(args: argparse.Namespace) -> int:
+    while True:
+        watch_once(dry_run=args.dry_run, quiet=args.quiet)
+        time.sleep(args.interval)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser()
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    context = sub.add_parser("context")
+    context.add_argument("--cwd")
+    context.add_argument("--repo-root")
+    context.set_defaults(func=command_context)
+
+    for mode in ("save", "finish"):
+        record = sub.add_parser(mode)
+        record.add_argument("--cwd")
+        record.add_argument("--repo-root")
+        record.add_argument("--summary")
+        record.add_argument("--situation")
+        record.add_argument("--next-step")
+        record.add_argument("--status", default="in_progress")
+        record.add_argument("--change", action="append", default=[])
+        record.add_argument("--ref", action="append", default=[])
+        record.add_argument("--dry-run", action="store_true")
+        record.set_defaults(func=command_record, mode=mode)
+
+    watch_once_parser = sub.add_parser("watch-once")
+    watch_once_parser.add_argument("--dry-run", action="store_true")
+    watch_once_parser.add_argument("--quiet", action="store_true")
+    watch_once_parser.set_defaults(func=command_watch_once)
+
+    watch = sub.add_parser("watch")
+    watch.add_argument("--interval", type=int, default=180)
+    watch.add_argument("--dry-run", action="store_true")
+    watch.add_argument("--quiet", action="store_true")
+    watch.set_defaults(func=command_watch)
+    return parser
+
+
+def main() -> int:
+    ensure_runtime_dirs()
+    parser = build_parser()
+    args = parser.parse_args()
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

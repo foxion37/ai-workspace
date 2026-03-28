@@ -14,6 +14,13 @@ These files belong in `ai-workspace` because they define home-root policy and cr
 - `ai-workspace` -> home-root policy, machine manifests, sync rules
 - `mac-dotfiles` -> `.bashrc`, `.zprofile`, shell/tool bootstrap, install-time links
 
+## Canonical Set
+
+- `../README.md` -> docs map
+- `../ai-workspace-rules.md` -> top-level policy
+- `../sync-matrix.md` -> exact shared vs local-only path rules
+- `../session-commands.md` -> session command behavior
+
 ## Working Rule
 
 - Edit the canonical files here.

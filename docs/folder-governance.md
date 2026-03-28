@@ -1,10 +1,11 @@
 # Folder Governance
 
-This document defines how folders outside `AI-Workspace` should be handled.
+This document defines how folders outside `AI-Workspace` should be classified.
+Use `docs/sync-matrix.md` for exact tracked vs local-only path rules.
 
 ## Core Rule
 
-Not every folder under `/Users/seongqkim` should be synced into `AI-Workspace`.
+Not every home-root folder should be synced into `AI-Workspace`.
 
 Each folder must be classified into one of these states:
 
@@ -79,30 +80,30 @@ Typical examples:
 
 ## Home Directory Rules
 
-### `/Users/seongqkim/Desktop`
+### `Desktop`
 
 - Treat as an intake area, not a canonical workspace.
 - New working material should be triaged into `AI-Workspace/inbox/`, `reference/`, or `outputs/`.
 - Folders that remain active for more than a short period should be reclassified and moved intentionally.
 
-### `/Users/seongqkim/Documents`
+### `Documents`
 
 - Keep app-owned or personal document storage in place unless it becomes part of the shared workspace.
 - Historical backup folders should be classified as `backup`.
 - Manual safety snapshots should not be created in the home root. Put them under `developer/backups/manual-snapshots/` or inside the folder being changed.
 
-### `/Users/seongqkim/Downloads`
+### `Downloads`
 
 - Treat as disposable intake.
 - Files should be moved out quickly to `AI-Workspace`, a code repo, or deleted.
 
-### `/Users/seongqkim/developer`
+### `developer`
 
 - Keep as the source area for code repositories.
 - Do not fold all code repos into `AI-Workspace`.
 - Only shared rules, prompts, and workspace-level documentation should be mirrored into `AI-Workspace`.
 
-### `/Users/seongqkim/developer/tools/tmux`
+### `developer/tools/tmux`
 
 - Classify per project.
 - If they contain active cross-device materials, mirror the document layer into `AI-Workspace`.
@@ -129,13 +130,13 @@ Note:
 - Deploy them into the home root from `mac-dotfiles`.
 - Do not treat runtime state or local overrides as shared bootstrap.
 
-### `/Users/seongqkim/docs`
+### `docs`
 
 - Do not treat `~/docs` as a permanent standard folder.
 - If it contains active shared documents, move them into `AI-Workspace/docs/`, `reference/`, or `archive/`.
 - Otherwise classify it as a cleanup candidate and remove it from the standard home layout.
 
-### `/Users/seongqkim/manual`
+### `manual`
 
 - Do not treat `~/manual` as a permanent standard folder.
 - Move reusable references into `AI-Workspace/reference/` or another intentional location.

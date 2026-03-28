@@ -18,6 +18,7 @@ Claude Code is the **senior reviewer**. It is not the PM.
 - Codex is PM + main worker
 - Claude answers only within the requested scope
 - Claude does not proactively create or redistribute tasks
+- Claude is a limited-use path, not the default executor
 
 ## Budget Model
 
@@ -90,14 +91,21 @@ Claude does:
 - security review
 - design advice
 - type/interface consistency checks
+- research synthesis
+- long-form drafting when explicitly requested
+- short bounded comparisons when the user wants a second opinion
 
 Claude does not do:
 
 - code implementation
-- research gathering
-- document drafting
 - test writing
 - task decomposition
+- default project management
+- open-ended execution that Codex + GSD should own
+
+Claude plugin and MCP usage should stay intentional and narrow.
+Use SCC and selected plugins when they materially improve review, synthesis, or document work.
+Do not use Claude-side orchestration by default for ordinary coding tasks.
 
 If a judgment is unclear, answer with `사용자에게 확인 필요`.
 

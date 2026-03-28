@@ -1,0 +1,22 @@
+{
+  "ops": {
+    "page_id": "330883f1-56f5-81fd-9a10-ce37eeac532f",
+    "route": "dashboard > notion manual 1.0 > ops log"
+  },
+  "projects": {
+    "economy-content-agent": {
+      "check_log_page_id": "331883f1-56f5-8119-a850-e81cf49576ad",
+      "dashboard_page_id": "331883f1-56f5-814a-9590-d5a7194a9a45",
+      "hub_page_id": "314883f1-56f5-80f8-816e-e530e621efd3",
+      "reports_page_id": "331883f1-56f5-812d-8372-fc4b8962c406",
+      "route": "dashboard > developer > 경제 콘텐츠 분석",
+      "title": "경제 콘텐츠 분석"
+    }
+  },
+  "repo_overrides": {
+    ".dotfiles": "ops",
+    ".orchestra": "ops",
+    "ai-workspace": "ops",
+    "home-dev-infra": "ops"
+  }
+}

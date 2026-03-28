@@ -22,6 +22,23 @@ The default operating model is **Codex-led**.
 Codex handles task decomposition, implementation, testing, and status management.
 Claude focuses on architecture, security, and consistency review.
 
+## Tool Routing
+
+Default routing:
+
+- Codex + GSD: coding, planning, execution, debugging, testing, refactoring, Git work, repo-state work
+- Claude Code: architecture review, security review, design tradeoff calls, research synthesis, long-form drafting only when explicitly routed
+- Gemini CLI: current research, alternative comparison, outside-view sanity checks
+
+Tool retention:
+
+- keep: Codex, GSD
+- limited keep: SCC, Telegram, Notion, selected Claude-side plugins and MCP utilities with a clear non-code role
+- defer: MoAI-ADK
+
+MoAI-ADK is not part of the default environment.
+It overlaps heavily with GSD and SCC, so do not install or route to it by default.
+
 ## Home Root Standard
 
 Treat the home root as a routing layer, not as one giant repo.
@@ -87,19 +104,22 @@ Task files should use:
 
 ### Session Start
 
-1. Check `~/.orchestra/context/summary.md`
-2. Scan `~/.orchestra/tasks/`
-3. Check `~/.orchestra/budget.md`
-4. Check pending handoffs
-5. Log session start in `activity.log`
+1. Run `세션 시작` / `session-start` to sync the shared baseline from GitHub
+2. Check `~/.orchestra/context/summary.md`
+3. Scan `~/.orchestra/tasks/`
+4. Check `~/.orchestra/budget.md`
+5. Check pending handoffs
+6. Log session start in `activity.log`
 
 ### Session End
 
 1. Update task status
 2. Update `~/.orchestra/context/summary.md`
-3. Update `decisions.md` if needed
-4. Update `budget.md` if needed
-5. Log session end in `activity.log`
+3. If any incident report was created or updated, rerender `~/AI-Workspace/knowledge-db/incidents/INDEX.md`
+4. Update the local work note if the session created a meaningful blocker, resolution, or operating change
+5. Update `decisions.md` if needed
+6. Update `budget.md` if needed
+7. Log session end in `activity.log`
 
 ## Delegation Rules
 
@@ -126,8 +146,11 @@ Send to Claude:
 - security review
 - design tradeoff calls
 - interface consistency review
+- research synthesis when explicitly requested
+- long-form drafting when explicitly requested
 
 Do not send implementation, simple bug fixes, research gathering, or test writing to Claude.
+Do not use Claude or Gemini as a second default executor when Codex + GSD can handle the task directly.
 
 ## Communication Style
 

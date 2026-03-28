@@ -24,3 +24,4 @@ This folder stores the machine-level comparison baseline for the workspace.
 - `mac-dotfiles` holds the reusable config that gets applied on each machine.
 - `ai-workspace/docs/home-root/` is the source of truth for `~/AGENTS.md` and `~/CLAUDE.md`.
 - `mac-dotfiles` is the source of truth for `.bashrc`, `.zprofile`, and root bootstrap scripts.
+- Keep machine-specific paths and current-state facts here, not in the canonical policy docs.
