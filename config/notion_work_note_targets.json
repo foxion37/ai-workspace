@@ -3,15 +3,20 @@
     "page_id": "330883f1-56f5-81fd-9a10-ce37eeac532f",
     "route": "dashboard > notion manual 1.0 > ops log"
   },
+  "ops_center": {
+    "page_id": "331883f1-56f5-81ba-a38e-f4170acc53dc",
+    "route": "dashboard > Ops Center",
+    "title": "Ops Center"
+  },
   "projects": {
     "ai-glossary": {
-      "route": "dashboard > developer > ai-glossary",
       "rollout_status": "template_pending",
+      "route": "dashboard > developer > ai-glossary",
       "title": "AI Glossary"
     },
     "ai-web-project": {
-      "route": "dashboard > developer > ai-web-project",
       "rollout_status": "template_pending",
+      "route": "dashboard > developer > ai-web-project",
       "title": "AI Web Project"
     },
     "economy-content-agent": {
@@ -19,15 +24,25 @@
       "dashboard_page_id": "331883f1-56f5-814a-9590-d5a7194a9a45",
       "hub_page_id": "314883f1-56f5-80f8-816e-e530e621efd3",
       "reports_page_id": "331883f1-56f5-812d-8372-fc4b8962c406",
-      "route": "dashboard > developer > 경제 콘텐츠 분석",
       "rollout_status": "live",
+      "route": "dashboard > developer > \uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d",
       "template": "current/reports/check log",
-      "title": "경제 콘텐츠 분석"
+      "title": "\uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d"
     },
     "linkbot": {
-      "route": "dashboard > developer > linkbot",
       "rollout_status": "template_pending",
+      "route": "dashboard > developer > linkbot",
       "title": "Linkbot"
+    },
+    "notion-structure-ops": {
+      "check_log_page_id": "331883f1-56f5-81be-82bf-ff8e537b1f7b",
+      "dashboard_page_id": "331883f1-56f5-811b-89f5-d075266c2b37",
+      "hub_page_id": "331883f1-56f5-8183-b9f3-ddd8ba746d14",
+      "reports_page_id": "331883f1-56f5-8161-acc2-cc3affb2891e",
+      "rollout_status": "live",
+      "route": "dashboard > developer > \ub178\uc158 \uad6c\uc870 \uc815\ub9ac",
+      "template": "current/reports/check log",
+      "title": "\ub178\uc158 \uad6c\uc870 \uc815\ub9ac"
     }
   },
   "repo_overrides": {
@@ -35,5 +50,10 @@
     ".orchestra": "ops",
     "ai-workspace": "ops",
     "home-dev-infra": "ops"
+  },
+  "session_reports": {
+    "database_id": "331883f1-56f5-812e-ab30-e6a4c7a403cb",
+    "route": "dashboard > developer > AI Session Reports",
+    "title": "AI Session Reports"
   }
 }

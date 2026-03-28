@@ -1,1 +1,1 @@
-SESSION_VALIDATE_CMD="git diff --check && python3 -m py_compile scripts/render_incident_index.py scripts/session_work_note.py"
+SESSION_VALIDATE_CMD="git diff --check && python3 -m py_compile scripts/render_incident_index.py scripts/session_work_note.py scripts/lint_notion_titles.py scripts/bootstrap_notion_human_ops.py"

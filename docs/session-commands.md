@@ -49,7 +49,8 @@ Shared baseline repos:
 - `~/.dotfiles`
 
 It does not sync normal project repos, iCloud working files, or local runtime state.
-It does not write Notion.
+It now also creates or updates a human-readable session report locally.
+If the Notion route is wired and auth works, it also queues or syncs the matching Notion page.
 
 ### `session-save`
 
@@ -65,7 +66,7 @@ It does:
 It does not push by default.
 
 Before running it, rerender `~/AI-Workspace/knowledge-db/incidents/INDEX.md` if the session created or updated any incident report.
-If the shared work-note helper is installed, it also updates a local work note when the session represents a meaningful situation.
+If the shared work-note helper is installed, it also updates the current session report and the local session-report index.
 
 ### `session-finish`
 
@@ -80,7 +81,7 @@ It does:
 5. `git push`
 
 Before running it, rerender `~/AI-Workspace/knowledge-db/incidents/INDEX.md` if the session created or updated any incident report.
-If the shared work-note helper is installed, it also updates a local work note after a successful finish.
+If the shared work-note helper is installed, it also updates the current session report and the local session-report index after a successful finish.
 
 ## Optional Repo Config
 
@@ -138,6 +139,10 @@ The shared reporting helper lives in:
 
 - `~/developer/projects/ai-workspace/scripts/session_work_note.py`
 
+The human-readable local session-report index lives in:
+
+- `~/AI-Workspace/knowledge-db/session-reports/INDEX.md`
+
 Manual helper commands:
 
 - `python3 ~/developer/projects/ai-workspace/scripts/session_work_note.py queue-status`
@@ -145,6 +150,7 @@ Manual helper commands:
 
 Use `queue-status` to inspect pending Notion writes.
 Use `sync` only after `NOTION_API_KEY` and the target page IDs are configured.
+Use `start` to create or refresh the current session report if a session begins outside the standard wrapper.
 
 Zsh convenience names:
 

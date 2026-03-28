@@ -7,6 +7,7 @@ Use this file to decide which document to open first.
 - `ai-workspace-rules.md`: top-level policy for storage, sync, secrets, and backups
 - `sync-matrix.md`: exact tracked, template-only, and local-only path rules
 - `session-commands.md`: standard session command behavior
+- `notion-human-ops-standard.md`: human-first Notion dashboard, session report, and ops-center design
 - `home-root/AGENTS.md`: home-root operating routine for Codex-led work
 
 ## Reference Docs
