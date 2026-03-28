@@ -89,6 +89,13 @@ Automatic recording follows the same routing logic.
 - project event -> project hub
 - incident remains local-first and only mirrors a short summary into Notion
 
+Direct API sync is opt-in for now.
+
+- keep local Markdown as canonical
+- queue only when the route has a real parent page ID
+- if the project hub is not wired yet, keep `notion_sync: not_configured`
+- use manual `session_work_note.py sync` after `NOTION_API_KEY` and page IDs are ready
+
 If Notion sync fails:
 
 - keep the local work note
@@ -101,3 +108,9 @@ If Notion sync fails:
   - `dashboard > notion manual 1.0 > ops log`
 - `economy-content-agent`
   - `dashboard > developer > 경제 콘텐츠 분석`
+- `ai-glossary`
+  - `dashboard > developer > ai-glossary`
+- `ai-web-project`
+  - `dashboard > developer > ai-web-project`
+- `linkbot`
+  - `dashboard > developer > linkbot`

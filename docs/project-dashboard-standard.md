@@ -2,6 +2,8 @@
 
 This document defines the default structure for project hubs in Notion.
 
+Copy-ready starter text lives in `docs/project-dashboard-template.md`.
+
 ## Goal
 
 The first project surface should answer:
@@ -108,3 +110,14 @@ Keep dashboard text short.
 - summary first
 - details by link
 - latest valid state only
+
+## Rollout Note
+
+Known developer project rollout targets now include:
+
+- `economy-content-agent` as the live reference implementation
+- `ai-glossary`
+- `ai-web-project`
+- `linkbot`
+
+Projects without Notion page IDs should still follow the same local-first structure, but their work notes remain `notion_sync: not_configured` until the hub pages exist.

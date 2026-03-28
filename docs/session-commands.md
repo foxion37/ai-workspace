@@ -130,6 +130,14 @@ The shared reporting helper lives in:
 
 - `~/developer/projects/ai-workspace/scripts/session_work_note.py`
 
+Manual helper commands:
+
+- `python3 ~/developer/projects/ai-workspace/scripts/session_work_note.py queue-status`
+- `python3 ~/developer/projects/ai-workspace/scripts/session_work_note.py sync`
+
+Use `queue-status` to inspect pending Notion writes.
+Use `sync` only after `NOTION_API_KEY` and the target page IDs are configured.
+
 Zsh convenience names:
 
 - `세션초기화`

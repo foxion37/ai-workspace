@@ -4,13 +4,30 @@
     "route": "dashboard > notion manual 1.0 > ops log"
   },
   "projects": {
+    "ai-glossary": {
+      "route": "dashboard > developer > ai-glossary",
+      "rollout_status": "template_pending",
+      "title": "AI Glossary"
+    },
+    "ai-web-project": {
+      "route": "dashboard > developer > ai-web-project",
+      "rollout_status": "template_pending",
+      "title": "AI Web Project"
+    },
     "economy-content-agent": {
       "check_log_page_id": "331883f1-56f5-8119-a850-e81cf49576ad",
       "dashboard_page_id": "331883f1-56f5-814a-9590-d5a7194a9a45",
       "hub_page_id": "314883f1-56f5-80f8-816e-e530e621efd3",
       "reports_page_id": "331883f1-56f5-812d-8372-fc4b8962c406",
       "route": "dashboard > developer > 경제 콘텐츠 분석",
+      "rollout_status": "live",
+      "template": "current/reports/check log",
       "title": "경제 콘텐츠 분석"
+    },
+    "linkbot": {
+      "route": "dashboard > developer > linkbot",
+      "rollout_status": "template_pending",
+      "title": "Linkbot"
     }
   },
   "repo_overrides": {

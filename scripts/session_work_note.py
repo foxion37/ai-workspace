@@ -347,6 +347,12 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
     )
 
 
+def route_parent_page_id(route: RouteInfo) -> str | None:
+    if route.kind == "ops":
+        return route.ops_parent_page_id
+    return route.reports_page_id
+
+
 def render_work_note(note: dict[str, Any]) -> str:
     def list_block(items: list[str]) -> str:
         if not items:
@@ -407,9 +413,9 @@ def render_work_note(note: dict[str, Any]) -> str:
 
 
 def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route: RouteInfo) -> None:
-    parent_id = route.ops_parent_page_id if route.kind == "ops" else route.reports_page_id
+    parent_id = route_parent_page_id(route)
     if not parent_id:
-        note["notion_sync"] = "pending"
+        note["notion_sync"] = "not_configured"
         return
     payload = {
         "note_id": note["id"],
@@ -423,6 +429,7 @@ def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route
     }
     fingerprint = hashlib.sha1(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
     if any(item.get("fingerprint") == fingerprint for item in queue):
+        note["notion_sync"] = "pending"
         return
     payload["fingerprint"] = fingerprint
     queue.append(payload)
@@ -508,6 +515,21 @@ def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> list[dict[str, Any
         except (RuntimeError, error.HTTPError, error.URLError, KeyError):
             remaining.append(item)
     return remaining
+
+
+def queue_summary_lines(queue: list[dict[str, Any]]) -> list[str]:
+    if not queue:
+        return ["[queue] empty"]
+    grouped: dict[str, int] = {}
+    for item in queue:
+        target = item.get("notion_target", "unknown")
+        grouped[target] = grouped.get(target, 0) + 1
+    lines = [f"[queue] pending={len(queue)}"]
+    for target, count in sorted(grouped.items()):
+        lines.append(f"[target] {target} ({count})")
+    for item in queue[:5]:
+        lines.append(f"[item] {item['title']} -> {item['notion_target']}")
+    return lines
 
 
 def write_note(note: dict[str, Any], ledger: dict[str, Any]) -> Path:
@@ -799,6 +821,43 @@ def command_watch(args: argparse.Namespace) -> int:
         time.sleep(args.interval)
 
 
+def command_queue_status(args: argparse.Namespace) -> int:
+    del args
+    ensure_runtime_dirs()
+    queue = load_queue()
+    print("\n".join(queue_summary_lines(queue)))
+    return 0
+
+
+def command_sync(args: argparse.Namespace) -> int:
+    ensure_runtime_dirs()
+    queue = load_queue()
+    if not queue:
+        print("[sync] queue empty")
+        return 0
+
+    load_env_from_known_files()
+    has_api_key = bool(os.environ.get("NOTION_API_KEY"))
+    remaining_queue = sync_queue(queue, dry_run=args.dry_run)
+    synced = len(queue) - len(remaining_queue)
+
+    lines = [
+        f"[sync] attempted={len(queue)} synced={synced} remaining={len(remaining_queue)}",
+    ]
+    if args.dry_run:
+        lines.append("[mode] dry-run")
+    elif not has_api_key:
+        lines.append("[status] waiting_for_api_key")
+
+    lines.extend(queue_summary_lines(remaining_queue))
+
+    if not args.dry_run:
+        save_queue(remaining_queue)
+
+    print("\n".join(lines))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="command", required=True)
@@ -831,6 +890,13 @@ def build_parser() -> argparse.ArgumentParser:
     watch.add_argument("--dry-run", action="store_true")
     watch.add_argument("--quiet", action="store_true")
     watch.set_defaults(func=command_watch)
+
+    queue_status = sub.add_parser("queue-status")
+    queue_status.set_defaults(func=command_queue_status)
+
+    sync = sub.add_parser("sync")
+    sync.add_argument("--dry-run", action="store_true")
+    sync.set_defaults(func=command_sync)
     return parser
 
 

@@ -14,6 +14,9 @@
 - [Naming Convention](docs/naming-convention.md)
 - [Runbook](docs/runbook.md)
 - [Decision Log](docs/decision-log.md)
+- [Project Dashboard Standard](docs/project-dashboard-standard.md)
+- [Project Dashboard Template Pack](docs/project-dashboard-template.md)
+- [Session Commands](docs/session-commands.md)
 
 ## 운영 원칙
 
