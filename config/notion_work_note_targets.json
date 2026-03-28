@@ -10,13 +10,23 @@
   },
   "projects": {
     "ai-glossary": {
-      "rollout_status": "template_pending",
-      "route": "dashboard > developer > ai-glossary",
+      "check_log_page_id": "331883f1-56f5-8112-8aec-d4a95a1d7a8a",
+      "dashboard_page_id": "331883f1-56f5-816c-9560-cee030195ea3",
+      "hub_page_id": "331883f1-56f5-8150-be3d-c1e2a8afde4e",
+      "reports_page_id": "331883f1-56f5-81cc-8b7d-ef5219d7c185",
+      "rollout_status": "live",
+      "route": "dashboard > developer > AI Glossary",
+      "template": "current/reports/check log",
       "title": "AI Glossary"
     },
     "ai-web-project": {
-      "rollout_status": "template_pending",
-      "route": "dashboard > developer > ai-web-project",
+      "check_log_page_id": "331883f1-56f5-810b-88d8-c01f51b97574",
+      "dashboard_page_id": "331883f1-56f5-810b-881b-f0c20e3a85a8",
+      "hub_page_id": "331883f1-56f5-8130-9e59-cc1da0707c08",
+      "reports_page_id": "331883f1-56f5-817d-a9bc-d0c26d3b0fd8",
+      "rollout_status": "live",
+      "route": "dashboard > developer > AI Web Project",
+      "template": "current/reports/check log",
       "title": "AI Web Project"
     },
     "economy-content-agent": {
@@ -30,8 +40,13 @@
       "title": "\uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d"
     },
     "linkbot": {
-      "rollout_status": "template_pending",
-      "route": "dashboard > developer > linkbot",
+      "check_log_page_id": "331883f1-56f5-8138-9285-f8d2aafea355",
+      "dashboard_page_id": "331883f1-56f5-8148-b0be-d701c99ee54d",
+      "hub_page_id": "331883f1-56f5-8124-b390-e5b60a23c3f8",
+      "reports_page_id": "331883f1-56f5-81e9-9370-e92280cc7ce2",
+      "rollout_status": "live",
+      "route": "dashboard > developer > Linkbot",
+      "template": "current/reports/check log",
       "title": "Linkbot"
     },
     "notion-structure-ops": {
