@@ -428,11 +428,15 @@ def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route
         "updated_at": note["date_updated"],
     }
     fingerprint = hashlib.sha1(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
-    if any(item.get("fingerprint") == fingerprint for item in queue):
+    existing_index = next((i for i, item in enumerate(queue) if item.get("note_id") == note["id"]), None)
+    if existing_index is not None and queue[existing_index].get("fingerprint") == fingerprint:
         note["notion_sync"] = "pending"
         return
     payload["fingerprint"] = fingerprint
-    queue.append(payload)
+    if existing_index is not None:
+        queue[existing_index] = payload
+    else:
+        queue.append(payload)
     note["notion_sync"] = "pending"
 
 
