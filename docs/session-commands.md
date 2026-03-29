@@ -6,11 +6,22 @@ This document defines the standard session commands for both people and agents.
 
 - `세션 초기화` means `session-init`
 - `세션 시작` means `session-start`
+- `세션 재개` means `session-start` — "다른 Mac에서 이어간다"는 의미의 별칭
 - `세션 저장` means `session-save`
 - `세션 완료` means `session-finish`
 
 Use the Korean phrases in conversation.
 Use the shell commands in the terminal.
+
+### 세션 재개 vs 세션 시작
+
+두 명령은 동일한 `session-start`를 실행한다.
+의미 차이만 있음:
+
+| 호출어 | 의미 | 상황 |
+|---|---|---|
+| `세션 시작` | 오늘 작업을 시작한다 | 메인 맥에서 첫 시작 |
+| `세션 재개` | 다른 맥에서 이어간다 | 이어받기, pull + install.sh |
 
 ## Commands
 
@@ -165,8 +176,12 @@ When a user says `세션 초기화`, agents should run `session-init`.
 
 When a user says `세션 시작`, agents should run `session-start`.
 
+When a user says `세션 재개`, agents should run `session-start`.
+
 When a user says `세션 저장`, agents should run `session-save`.
 
 When a user says `세션 완료`, agents should run `session-finish`.
+
+When a user says `이 맥에서 이어간다`, `환경 맞춰줘`, `세션 동기화`, or similar, agents should run `session-start`.
 
 If a meaningful blocker, resolution, or operating change happens and the user forgets to run a session command, agents should still update the local work note and related local canonical artifacts.

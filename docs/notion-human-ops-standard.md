@@ -222,6 +222,7 @@ Only use color when the page must signal active status.
 - `light gray`: archive or legacy
 
 The exact color policy and emoji limits live in `docs/notion-obsidian-style-guide.md`.
+Automation should prefer native Notion icons with color when the API path supports them.
 
 ## Notion Notes
 

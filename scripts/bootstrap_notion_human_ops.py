@@ -8,6 +8,8 @@ from urllib import request
 
 ROOT = Path("/Users/barq")
 CONFIG_PATH = ROOT / "developer/projects/ai-workspace/config/notion_work_note_targets.json"
+LEGACY_NOTION_VERSION = "2022-06-28"
+ICON_NOTION_VERSION = "2026-03-11"
 
 DASHBOARD_ROOT_ID = "32b883f1-56f5-8098-94a6-ffa4ea21a9b9"
 DEVELOPER_PAGE_ID = "32a883f1-56f5-8121-8685-ce680592ff2a"
@@ -31,14 +33,14 @@ def load_env() -> None:
         os.environ["NOTION_API_KEY"] = os.environ["NOTION_AGENT_TOKEN"]
 
 
-def notion_request(method: str, url: str, body: dict | None = None) -> dict:
+def notion_request(method: str, url: str, body: dict | None = None, version: str = LEGACY_NOTION_VERSION) -> dict:
     token = os.environ["NOTION_API_KEY"]
     req = request.Request(
         url,
         data=json.dumps(body).encode("utf-8") if body is not None else None,
         headers={
             "Authorization": f"Bearer {token}",
-            "Notion-Version": "2022-06-28",
+            "Notion-Version": version,
             "Content-Type": "application/json",
         },
         method=method,
@@ -69,6 +71,19 @@ def title_property(title: str) -> dict:
     return {"title": [{"type": "text", "text": {"content": title[:180]}}]}
 
 
+def native_icon(name: str, color: str) -> dict:
+    return {"type": "icon", "icon": {"name": name, "color": color}}
+
+
+def update_page_icon(page_id: str, icon_payload: dict) -> None:
+    notion_request(
+        "PATCH",
+        f"https://api.notion.com/v1/pages/{page_id}",
+        {"icon": icon_payload},
+        version=ICON_NOTION_VERSION,
+    )
+
+
 def list_children(parent_id: str) -> list[dict]:
     data = notion_request("GET", f"https://api.notion.com/v1/blocks/{parent_id}/children?page_size=100")
     return data.get("results", [])
@@ -76,6 +91,8 @@ def list_children(parent_id: str) -> list[dict]:
 
 def clear_children(page_id: str) -> None:
     for child in list_children(page_id):
+        if child.get("type") in {"child_page", "child_database"}:
+            continue
         notion_request("PATCH", f"https://api.notion.com/v1/blocks/{child['id']}", {"archived": True})
 
 
@@ -96,15 +113,21 @@ def find_child(parent_id: str, block_type: str, title: str) -> str | None:
     return None
 
 
-def ensure_page(parent_id: str, title: str, blocks: list[dict]) -> str:
+def ensure_page(parent_id: str, title: str, blocks: list[dict], icon_payload: dict | None = None) -> str:
     page_id = find_child(parent_id, "child_page", title)
     if not page_id:
+        body = {"parent": {"page_id": parent_id}, "properties": {"title": title_property(title)}}
+        if icon_payload is not None:
+            body["icon"] = icon_payload
         page = notion_request(
             "POST",
             "https://api.notion.com/v1/pages",
-            {"parent": {"page_id": parent_id}, "properties": {"title": title_property(title)}},
+            body,
+            version=ICON_NOTION_VERSION if icon_payload is not None else LEGACY_NOTION_VERSION,
         )
         page_id = page["id"]
+    if icon_payload is not None:
+        update_page_icon(page_id, icon_payload)
     replace_page_content(page_id, blocks)
     return page_id
 
@@ -142,6 +165,7 @@ def create_db_row(database_id: str, title: str, status: str, progress: int, agen
         "https://api.notion.com/v1/pages",
         {
             "parent": {"database_id": database_id},
+            "icon": native_icon("document", "orange"),
             "properties": {
                 "Title": title_property(title),
                 "Status": {"select": {"name": status}},
@@ -155,6 +179,7 @@ def create_db_row(database_id: str, title: str, status: str, progress: int, agen
                 "Local Source": {"rich_text": [{"type": "text", "text": {"content": local_source[:1900]}}]},
             },
         },
+        version=ICON_NOTION_VERSION,
     )
     replace_page_content(page["id"], blocks)
     return page["id"]
@@ -220,6 +245,8 @@ def main() -> int:
         bullet("Body content starts at H2."),
     ]
     replace_page_content(MANUAL_PAGE_ID, manual_blocks)
+    update_page_icon(MANUAL_PAGE_ID, native_icon("document", "blue"))
+    print("[ok] manual updated", flush=True)
 
     ops_center_blocks = [
         callout("이 페이지는 운영 매뉴얼, 운영 로그, 세션 리포트로 들어가는 사람 중심 운영 입구다."),
@@ -234,7 +261,8 @@ def main() -> int:
         bullet("프로젝트별 current / reports / check log 흐름은 developer 허브 표준을 따른다."),
         bullet("로컬 문서가 원장이고, Notion은 사람이 읽는 현재 상태판으로 유지한다."),
     ]
-    ops_center_page_id = ensure_page(DASHBOARD_ROOT_ID, "Ops Center", ops_center_blocks)
+    ops_center_page_id = ensure_page(DASHBOARD_ROOT_ID, "Ops Center", ops_center_blocks, native_icon("home", "blue"))
+    print("[ok] Ops Center updated", flush=True)
 
     hub_blocks = [
         callout("이 페이지는 노션 구조 정리 세션의 프로젝트 허브다."),
@@ -247,7 +275,8 @@ def main() -> int:
         bullet("check log"),
         bullet("references"),
     ]
-    hub_page_id = ensure_page(DEVELOPER_PAGE_ID, "노션 구조 정리", hub_blocks)
+    hub_page_id = ensure_page(DEVELOPER_PAGE_ID, "노션 구조 정리", hub_blocks, native_icon("document", "orange"))
+    print("[ok] hub updated", flush=True)
 
     current_blocks = [
         callout("현재 기준 상태만 짧게 보여주는 사람 중심 작업판이다."),
@@ -280,7 +309,8 @@ def main() -> int:
         bullet("notion-human-ops-standard.md"),
         bullet("notion-obsidian-style-guide.md"),
     ]
-    current_page_id = ensure_page(hub_page_id, "current", current_blocks)
+    current_page_id = ensure_page(hub_page_id, "current", current_blocks, native_icon("document", "orange"))
+    print("[ok] current updated", flush=True)
 
     reports_page_id = ensure_page(
         hub_page_id,
@@ -293,7 +323,9 @@ def main() -> int:
             text_block("heading_2", "Source Of Truth"),
             bullet("원문과 긴 reasoning은 local Markdown이 정본이다."),
         ],
+        native_icon("document", "gray"),
     )
+    print("[ok] reports updated", flush=True)
 
     check_log_page_id = ensure_page(
         hub_page_id,
@@ -305,7 +337,9 @@ def main() -> int:
             text_block("heading_2", "Archive Rule"),
             bullet("완료된 항목은 접거나 archive 처리한다."),
         ],
+        native_icon("document", "red"),
     )
+    print("[ok] check log updated", flush=True)
 
     ensure_page(
         hub_page_id,
@@ -317,9 +351,12 @@ def main() -> int:
             bullet("notion-work-note-routing.md"),
             bullet("project-dashboard-standard.md"),
         ],
+        native_icon("document", "blue"),
     )
+    print("[ok] references updated", flush=True)
 
     session_db_id = ensure_database(DEVELOPER_PAGE_ID, "AI Session Reports")
+    print("[ok] session db ensured", flush=True)
     create_db_row(
         session_db_id,
         "2026-03-28 | 노션 구조 정리 | session report",
@@ -354,6 +391,7 @@ def main() -> int:
             bullet(str(ROOT / ".orchestra/work-notes/2026-03-28__ops__ai-workspace.md")),
         ],
     )
+    print("[ok] sample session row created", flush=True)
 
     update_config(
         ops_center_page_id,
@@ -365,6 +403,7 @@ def main() -> int:
         },
         session_db_id,
     )
+    print("[ok] config updated", flush=True)
 
     print(json.dumps(
         {

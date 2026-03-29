@@ -84,6 +84,12 @@ Rules:
 - when the status signal no longer matters, return to gray
 - do not use color just for decoration
 
+Automation rule:
+
+- for Notion API writes, prefer native Notion icons with explicit color
+- use emoji only when the icon itself must communicate meaning beyond the color signal
+- the default automation shape may stay stable while only the color changes
+
 ## Heading Rules
 
 ### Notion

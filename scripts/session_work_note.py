@@ -15,6 +15,8 @@ from typing import Any
 from urllib import error, request
 
 ROOT = Path("/Users/barq")
+LEGACY_NOTION_VERSION = "2022-06-28"
+ICON_NOTION_VERSION = "2026-03-11"
 ORCHESTRA_DIR = ROOT / ".orchestra"
 WORK_NOTES_DIR = ORCHESTRA_DIR / "work-notes"
 STATE_DIR = ORCHESTRA_DIR / "state"
@@ -635,6 +637,7 @@ def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route
         "note_id": note["id"],
         "kind": route.kind,
         "title": note["title"],
+        "status": note["status"],
         "parent_page_id": parent_id,
         "content_markdown": build_notion_markdown(note),
         "page_id": note.get("notion_page_id"),
@@ -655,7 +658,7 @@ def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route
     note["notion_sync"] = "pending"
 
 
-def notion_request(method: str, url: str, body: dict[str, Any] | None = None) -> dict[str, Any]:
+def notion_request(method: str, url: str, body: dict[str, Any] | None = None, version: str = LEGACY_NOTION_VERSION) -> dict[str, Any]:
     token = os.environ.get("NOTION_API_KEY")
     if not token:
         raise RuntimeError("NOTION_API_KEY missing")
@@ -664,7 +667,7 @@ def notion_request(method: str, url: str, body: dict[str, Any] | None = None) ->
         data=json.dumps(body).encode("utf-8") if body is not None else None,
         headers={
             "Authorization": f"Bearer {token}",
-            "Notion-Version": "2022-06-28",
+            "Notion-Version": version,
             "Content-Type": "application/json",
         },
         method=method,
@@ -729,6 +732,33 @@ def page_title_payload(title: str) -> dict[str, Any]:
     return {
         "title": {
             "title": [{"type": "text", "text": {"content": title[:180]}}]
+        }
+    }
+
+
+def page_icon_payload(status: str) -> dict[str, Any]:
+    color_map = {
+        "blocked": "red",
+        "failed": "red",
+        "self_review": "red",
+        "claude_review": "red",
+        "in_progress": "orange",
+        "start": "orange",
+        "monitoring": "yellow",
+        "warning": "yellow",
+        "save": "yellow",
+        "done": "green",
+        "success": "green",
+        "finish": "green",
+        "info": "blue",
+    }
+    return {
+        "icon": {
+            "type": "icon",
+            "icon": {
+                "name": "document",
+                "color": color_map.get(status, "gray"),
+            },
         }
     }
 
@@ -823,7 +853,11 @@ def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> tuple[list[dict[st
                 notion_request(
                     "PATCH",
                     f"https://api.notion.com/v1/pages/{page_id}",
-                    {"properties": page_title_payload(item["title"])},
+                    {
+                        "properties": page_title_payload(item["title"]),
+                        **page_icon_payload(item.get("status", "info")),
+                    },
+                    version=ICON_NOTION_VERSION,
                 )
             else:
                 page = notion_request(
@@ -832,7 +866,9 @@ def sync_queue(queue: list[dict[str, Any]], dry_run: bool) -> tuple[list[dict[st
                     {
                         "parent": {"page_id": item["parent_page_id"]},
                         "properties": page_title_payload(item["title"]),
+                        **page_icon_payload(item.get("status", "info")),
                     },
+                    version=ICON_NOTION_VERSION,
                 )
                 page_id = page["id"]
             replace_page_children(page_id, item["content_markdown"])
