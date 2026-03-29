@@ -18,12 +18,12 @@ FILES_TO_SCAN = [
 ]
 
 FIXED_FUNCTIONAL_NAMES = {
-    "Ops Center",
-    "current",
-    "reports",
-    "check log",
-    "ops log",
-    "references",
+    "운영 센터 (Ops Center)",
+    "현재 상태 (current)",
+    "진행 기록 (reports)",
+    "점검 기록 (check log)",
+    "운영 로그 (ops log)",
+    "기준 자료 (references)",
 }
 
 REQUIRED_BILINGUAL_TITLES = {

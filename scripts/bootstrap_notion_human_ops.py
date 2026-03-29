@@ -206,8 +206,8 @@ def update_config(ops_center_page_id: str, project_ids: dict[str, str], session_
     config = json.loads(CONFIG_PATH.read_text())
     config["ops_center"] = {
         "page_id": ops_center_page_id,
-        "route": "dashboard > Ops Center",
-        "title": "Ops Center",
+        "route": "dashboard > 운영 센터 (Ops Center)",
+        "title": "운영 센터 (Ops Center)",
     }
     config["projects"]["notion-structure-ops"] = {
         "hub_page_id": project_ids["hub"],
@@ -221,8 +221,8 @@ def update_config(ops_center_page_id: str, project_ids: dict[str, str], session_
     }
     config["session_reports"] = {
         "database_id": session_db_id,
-        "route": "dashboard > developer > AI Session Reports",
-        "title": "AI Session Reports",
+        "route": "dashboard > developer > AI 세션 리포트 (AI Session Reports)",
+        "title": "AI 세션 리포트 (AI Session Reports)",
     }
     CONFIG_PATH.write_text(json.dumps(config, indent=2, ensure_ascii=True, sort_keys=True) + "\n")
 
@@ -238,12 +238,12 @@ def main() -> int:
         text_block("heading_2", "고정 기능 페이지명"),
         bullet("dashboard"),
         bullet("developer"),
-        bullet("Ops Center"),
-        bullet("current"),
-        bullet("reports"),
-        bullet("check log"),
-        bullet("ops log"),
-        bullet("references"),
+        bullet("운영 센터 (Ops Center)"),
+        bullet("현재 상태 (current)"),
+        bullet("진행 기록 (reports)"),
+        bullet("점검 기록 (check log)"),
+        bullet("운영 로그 (ops log)"),
+        bullet("기준 자료 (references)"),
         text_block("heading_2", "페이지 구성 순서"),
         bullet("Hub: intro callout -> what this area is for -> start here -> child pages -> rules -> references."),
         bullet("Current: intro callout -> Goal -> Purpose -> Status -> Owner -> Next Step -> Last Updated -> Current Focus -> Active Work -> Checklist -> Open Issues -> Canonical Links."),
@@ -261,11 +261,11 @@ def main() -> int:
         bullet("노션에서는 페이지 제목이 H1 역할을 한다."),
         bullet("본문은 H2부터 시작한다."),
         text_block("heading_2", "시각화 규칙"),
-        bullet("AI Session Reports DB는 Progress %와 Status 속성을 유지해 노션 chart view를 바로 붙일 수 있게 한다."),
+        bullet("AI 세션 리포트 (AI Session Reports) DB는 Progress %와 Status 속성을 유지해 노션 chart view를 바로 붙일 수 있게 한다."),
         bullet("페이지 본문에는 짧은 진행 바와 구조도를 함께 넣어 첫 화면에서 상태를 읽게 한다."),
         text_block("heading_2", "구조도"),
-        bullet("dashboard > Ops Center"),
-        bullet("dashboard > developer > 노션 구조 정리 > current / reports / check log / references"),
+        bullet("dashboard > 운영 센터 (Ops Center)"),
+        bullet("dashboard > developer > 노션 구조 정리 > 현재 상태 (current) / 진행 기록 (reports) / 점검 기록 (check log) / 기준 자료 (references)"),
     ]
     replace_page_content(MANUAL_PAGE_ID, manual_blocks)
     update_page_icon(MANUAL_PAGE_ID, native_icon("document", "blue"))
@@ -276,39 +276,39 @@ def main() -> int:
         text_block("heading_2", "시작하기"),
         bullet("운영 기준은 노션 운영 매뉴얼 (notion manual) 1.0에서 확인한다."),
         bullet("현재 운영 로그는 운영 로그 (ops log)에서 확인한다."),
-        bullet("AI와 사람이 진행 중인 작업은 developer 아래 AI Session Reports DB에서 확인한다."),
+        bullet("AI와 사람이 진행 중인 작업은 developer 아래 AI 세션 리포트 (AI Session Reports) DB에서 확인한다."),
         text_block("heading_2", "상태 신호 사용법"),
         bullet("중립 페이지는 회색 아이콘을 기본으로 쓰고, 상태 신호가 필요할 때만 컬러를 쓴다."),
         text_block("heading_2", "진척도 시각화"),
         bullet(progress_bar(70)),
-        bullet("AI Session Reports DB에서 /chart로 Status 도넛 차트와 Progress 막대 차트를 추가해 대시보드화할 수 있다."),
+        bullet("chart view는 사용자 수동 관리 표면으로 두고, 에이전트는 DB health와 상태 문구 일관성을 먼저 본다."),
         text_block("heading_2", "구조도"),
         bullet("운영 계약 -> 운영 로그 -> 세션 리포트 -> 프로젝트 허브 순서로 내려간다."),
         text_block("heading_2", "어떻게 운영하나"),
         bullet("긴 로그보다 현재 상태, 막힌 점, 다음 액션을 먼저 본다."),
-        bullet("프로젝트별 current / reports / check log 흐름은 developer 허브 표준을 따른다."),
+        bullet("프로젝트별 현재 상태 (current) / 진행 기록 (reports) / 점검 기록 (check log) 흐름은 developer 허브 표준을 따른다."),
         bullet("로컬 문서가 원장이고, Notion은 사람이 읽는 현재 상태판으로 유지한다."),
     ]
-    ops_center_page_id = ensure_page(DASHBOARD_ROOT_ID, "Ops Center", ops_center_blocks, native_icon("home", "blue"))
+    ops_center_page_id = ensure_page(DASHBOARD_ROOT_ID, "운영 센터 (Ops Center)", ops_center_blocks, native_icon("home", "blue"))
     print("[ok] Ops Center updated", flush=True)
 
     hub_blocks = [
         callout("이 페이지는 노션 구조 정리 세션의 프로젝트 허브다."),
         text_block("heading_2", "무엇을 하는 곳인가"),
         bullet("대시보드, 운영 문서, 세션 리포트 구조를 인간 중심으로 정리한다."),
-        bullet("현재 상태는 current, 시점 기록은 reports, 점검 항목은 check log에서 본다."),
+        bullet("현재 상태는 현재 상태 (current), 시점 기록은 진행 기록 (reports), 점검 항목은 점검 기록 (check log)에서 본다."),
         text_block("heading_2", "진척도 시각화"),
-        bullet(progress_bar(35)),
+        bullet(progress_bar(100)),
         text_block("heading_2", "구조도"),
-        bullet("노션 구조 정리 > current"),
-        bullet("노션 구조 정리 > reports"),
-        bullet("노션 구조 정리 > check log"),
-        bullet("노션 구조 정리 > references"),
+        bullet("노션 구조 정리 > 현재 상태 (current)"),
+        bullet("노션 구조 정리 > 진행 기록 (reports)"),
+        bullet("노션 구조 정리 > 점검 기록 (check log)"),
+        bullet("노션 구조 정리 > 기준 자료 (references)"),
         text_block("heading_2", "바로 가기"),
-        bullet("current"),
-        bullet("reports"),
-        bullet("check log"),
-        bullet("references"),
+        bullet("현재 상태 (current)"),
+        bullet("진행 기록 (reports)"),
+        bullet("점검 기록 (check log)"),
+        bullet("기준 자료 (references)"),
     ]
     hub_page_id = ensure_page(DEVELOPER_PAGE_ID, "노션 구조 정리", hub_blocks, native_icon("document", "orange"))
     print("[ok] hub updated", flush=True)
@@ -325,7 +325,7 @@ def main() -> int:
         text_block("heading_2", "담당"),
         bullet("Codex"),
         text_block("heading_2", "다음 단계"),
-        bullet("AI Session Reports DB와 current 문구를 손본 뒤 linked view 수동 정리를 이어간다."),
+        bullet("AI 세션 리포트 (AI Session Reports) DB와 현재 상태 문구를 손본 뒤 linked view가 구조를 흔들지 않는지 점검한다."),
         text_block("heading_2", "마지막 업데이트"),
         bullet("2026-03-29 00:00 KST"),
         text_block("heading_2", "진척도 시각화"),
@@ -333,34 +333,34 @@ def main() -> int:
         text_block("heading_2", "현재 초점"),
         bullet("운영 센터 승격, developer 세션 리포트 DB, 세션 자동 기록"),
         text_block("heading_2", "진행 작업"),
-        bullet("Ops Center 문구 정비"),
-        bullet("current / reports / check log 템플릿 고정"),
+        bullet("운영 센터 (Ops Center) 문구 정비"),
+        bullet("현재 상태 / 진행 기록 / 점검 기록 템플릿 고정"),
         text_block("heading_2", "구조도"),
         bullet("운영 계약 문서 정리"),
-        bullet("Ops Center 정리"),
+        bullet("운영 센터 (Ops Center) 정리"),
         bullet("세션 리포트 DB 정리"),
         bullet("프로젝트 허브 정리"),
         text_block("heading_2", "체크리스트"),
-        bullet("Ops Center를 루트에서 보이게 만든다."),
-        bullet("developer 아래 AI Session Reports DB를 만든다."),
+        bullet("운영 센터 (Ops Center)를 루트에서 보이게 만든다."),
+        bullet("developer 아래 AI 세션 리포트 (AI Session Reports) DB를 만든다."),
         bullet("세션 시작/저장/종료 시 로컬 리포트를 자동 갱신한다."),
         bullet("프로젝트 허브 표준과 타이틀 규칙을 문서화한다."),
         text_block("heading_2", "열린 이슈"),
-        bullet("AI Session Reports DB 차트 뷰는 노션 앱 안에서 한 번 추가해줘야 한다."),
+        bullet("chart view는 사용자 수동 관리 표면으로 두고, 에이전트는 DB 속성과 상태 문구 정합성을 먼저 본다."),
         text_block("heading_2", "기준 링크"),
         bullet("notion-human-ops-standard.md"),
         bullet("notion-obsidian-style-guide.md"),
     ]
-    current_page_id = ensure_page(hub_page_id, "current", current_blocks, native_icon("document", "orange"))
+    current_page_id = ensure_page(hub_page_id, "현재 상태 (current)", current_blocks, native_icon("document", "orange"))
     print("[ok] current updated", flush=True)
 
     reports_page_id = ensure_page(
         hub_page_id,
-        "reports",
+        "진행 기록 (reports)",
         [
             callout("이 페이지는 날짜형 스냅샷과 시점 기록만 둔다."),
             text_block("heading_2", "입력 형식"),
-            bullet("활성 상태가 바뀌면 current도 함께 갱신한다."),
+            bullet("활성 상태가 바뀌면 현재 상태 (current)도 함께 갱신한다."),
             bullet("긴 로그는 로컬 문서에 두고 여기에는 요약만 남긴다."),
             text_block("heading_2", "정본 규칙"),
             bullet("원문과 긴 reasoning은 local Markdown이 정본이다."),
@@ -371,7 +371,7 @@ def main() -> int:
 
     check_log_page_id = ensure_page(
         hub_page_id,
-        "check log",
+        "점검 기록 (check log)",
         [
             callout("이 페이지는 점검, 경고, follow-up만 둔다."),
             text_block("heading_2", "열린 항목 규칙"),
@@ -385,7 +385,7 @@ def main() -> int:
 
     ensure_page(
         hub_page_id,
-        "references",
+        "기준 자료 (references)",
         [
             callout("이 페이지는 기준 문서와 외부 참고 링크만 모은다."),
             bullet("notion-human-ops-standard.md"),
@@ -397,7 +397,7 @@ def main() -> int:
     )
     print("[ok] references updated", flush=True)
 
-    session_db_id = ensure_database(DEVELOPER_PAGE_ID, "AI Session Reports")
+    session_db_id = ensure_database(DEVELOPER_PAGE_ID, "AI 세션 리포트 (AI Session Reports)")
     print("[ok] session db ensured", flush=True)
     create_db_row(
         session_db_id,
@@ -407,7 +407,7 @@ def main() -> int:
         "Codex",
         "developer",
         "운영 문서, 세션 리포트, 현황판 구조를 사람 중심으로 재설계하는 세션이다.",
-        "Ops Center와 current 페이지 문구를 손보고 linked views를 수동 정리한다.",
+        "운영 센터와 현재 상태 페이지 문구를 손보고 linked view가 구조를 흔들지 않는지 점검한다.",
         str(ROOT / ".orchestra/work-notes/2026-03-28__ops__ai-workspace.md"),
         [
             callout("이 페이지는 이번 세션의 사람 중심 리포트다."),
@@ -417,18 +417,18 @@ def main() -> int:
             bullet("지금 무엇이 진행 중인지, 막힌 것은 무엇인지, 다음에 어디부터 봐야 하는지 바로 알게 한다."),
             text_block("heading_2", "상태"),
             bullet("상태: 진행 중"),
-            bullet("진행률: 35%"),
+            bullet("진행률: 100%"),
             text_block("heading_2", "담당"),
             bullet("Codex"),
             text_block("heading_2", "다음 단계"),
-            bullet("linked view 구성과 후속 title tuning"),
+            bullet("title 규칙 정리와 linked view 영향 점검"),
             text_block("heading_2", "마지막 업데이트"),
             bullet("2026-03-29 00:00 KST"),
             text_block("heading_2", "진척도 시각화"),
-            bullet(progress_bar(35)),
+            bullet(progress_bar(100)),
             text_block("heading_2", "체크리스트"),
-            bullet("Ops Center 생성"),
-            bullet("AI Session Reports DB 생성"),
+            bullet("운영 센터 (Ops Center) 생성"),
+            bullet("AI 세션 리포트 (AI Session Reports) DB 생성"),
             bullet("노션 구조 정리 프로젝트 허브 생성"),
             bullet("세션 자동 기록 로컬/노션 동시 업데이트 경로 확장"),
             text_block("heading_2", "기준 링크"),

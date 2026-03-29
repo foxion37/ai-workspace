@@ -39,11 +39,11 @@ Route by ownership first, not by where the work happened.
 - if the change stays inside one project's active status surface, route to that project's hub
 - if a repo lives under `developer/projects` but is still missing a wired hub, keep the route as project-scoped and leave sync unconfigured
 
-### `ops log`
+### `운영 로그 (ops log)`
 
 Target:
 
-- `dashboard > notion manual 1.0 > ops log`
+- `대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > 운영 로그 (ops log)`
 
 Use when:
 
@@ -81,10 +81,10 @@ Each project hub should keep a dashboard-style first surface.
 Recommended flow:
 
 1. project hub page with overview
-2. `current` page as the live dashboard
-3. `reports` page for dated snapshots
-4. `check log` page for health checks and follow-ups
-5. `references` when needed
+2. `현재 상태 (current)` 페이지를 live dashboard로 둔다
+3. `진행 기록 (reports)` 페이지에는 날짜형 스냅샷만 둔다
+4. `점검 기록 (check log)` 페이지에는 health check와 follow-up만 둔다
+5. `기준 자료 (references)` 페이지는 필요할 때만 둔다
 
 Required dashboard fields:
 
@@ -103,9 +103,9 @@ Required dashboard fields:
 
 Operational meaning:
 
-- `current` is the live status surface
-- `reports` holds dated snapshots only
-- `check log` holds checks, reviews, warnings, and follow-up items
+- `현재 상태 (current)`는 live status surface다
+- `진행 기록 (reports)`는 날짜형 스냅샷만 둔다
+- `점검 기록 (check log)`는 점검, 리뷰, 경고, follow-up만 둔다
 - raw logs stay local and are linked, not pasted
 - use an intro callout as the summary surface on Notion pages
 - in Notion body content, start at `H2` because the title already acts as `H1`
@@ -114,7 +114,7 @@ Operational meaning:
 
 Automatic recording follows the same routing logic.
 
-- ops event -> `ops log`
+- ops event -> `운영 로그 (ops log)`
 - project event -> project hub
 - incident remains local-first and only mirrors a short summary into Notion
 
@@ -159,15 +159,15 @@ If Notion sync fails:
 ## Current default mapping
 
 - ops / home ops / `.orchestra` / `home-dev-infra` / `.dotfiles`
-  - `대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > ops log`
+  - `대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > 운영 로그 (ops log)`
 - `ai-workspace`
-  - `대시보드 (dashboard) > 개발 (developer) > AI Workspace`
+  - `대시보드 (dashboard) > 개발 (developer) > AI 워크스페이스 (AI Workspace)`
 - `economy-content-agent`
   - `대시보드 (dashboard) > 개발 (developer) > 경제 콘텐츠 분석`
 - `ai-glossary`
-  - `대시보드 (dashboard) > 개발 (developer) > AI Glossary`
+  - `대시보드 (dashboard) > 개발 (developer) > AI 용어집 (AI Glossary)`
 - `linkbot`
-  - `대시보드 (dashboard) > 개발 (developer) > Linkbot`
+  - `대시보드 (dashboard) > 개발 (developer) > 링크봇 (Linkbot)`
 
 Archived projects such as `ai-web-project` are excluded from active project routing.
 Keep their Notion pages as read-only historical references, but do not queue new project work notes for them.

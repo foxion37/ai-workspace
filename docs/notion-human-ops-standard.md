@@ -1,25 +1,26 @@
 # Notion Human Ops Standard
 
-This document defines the human-first Notion structure for dashboard, ops pages, and AI session reports.
+이 문서는 사람 중심의 노션 운영 구조를 정의한다.
 
-This file is the operating contract layer.
-For naming, icons, links, tags, and emphasis rules, use `docs/notion-obsidian-style-guide.md`.
+대상 범위는 `대시보드 (dashboard)`, 운영 페이지, 프로젝트 허브, `AI 세션 리포트 (AI Session Reports)`다.
+
+이 문서는 운영 계약 계층이다.
+제목 스타일, 아이콘, 링크, 태그, 강조 규칙은 `docs/notion-obsidian-style-guide.md`를 따른다.
 
 ## Design Goal
 
-The first screen should answer:
+첫 화면은 아래 질문에 바로 답해야 한다.
 
-- what this space is for
-- what is active now
-- what is blocked
-- where a beginner should click next
+- 이 공간은 무엇을 하는 곳인가
+- 지금 무엇이 진행 중인가
+- 무엇이 막혀 있는가
+- 초보자는 어디를 먼저 눌러야 하는가
 
-This standard is for people first.
-Agents may read it, but the layout should not assume technical fluency.
+이 기준은 사람 우선이다.
+에이전트도 읽을 수 있지만, 기술적 맥락을 많이 아는 사람만 이해할 수 있게 만들면 안 된다.
 
-Notion page body text should default to Korean-first.
-Top-level area pages should use Korean-first bilingual names.
-Only slot pages such as `current`, `reports`, and `check log` stay in English.
+노션 페이지 본문과 소제목은 한글 중심으로 쓴다.
+상위 허브뿐 아니라 하위 기능 페이지도 한글 우선-영문 병기 제목을 쓴다.
 
 ## Core Pattern
 
@@ -105,7 +106,7 @@ Recommended order:
 
 ### Report Surface
 
-Use for `reports`.
+Use for `진행 기록 (reports)`.
 
 Show:
 
@@ -122,7 +123,7 @@ Recommended order:
 
 ### Check Surface
 
-Use for `check log`.
+Use for `점검 기록 (check log)`.
 
 Show:
 
@@ -150,7 +151,7 @@ Put filtered current views first.
 
 ## Ops Center
 
-Promote current Notion operating manual and operating log into one visible category named `Ops Center`.
+현재 노션 운영 매뉴얼과 운영 로그를 `운영 센터 (Ops Center)`라는 사람 중심 입구로 묶는다.
 
 Suggested contents:
 
@@ -167,16 +168,16 @@ Treat the following as stable live names in Notion:
 
 - `대시보드 (dashboard)`
 - `개발 (developer)`
-- `Ops Center`
-- `current`
-- `reports`
-- `check log`
-- `ops log`
-- `references`
+- `운영 센터 (Ops Center)`
+- `현재 상태 (current)`
+- `진행 기록 (reports)`
+- `점검 기록 (check log)`
+- `운영 로그 (ops log)`
+- `기준 자료 (references)`
 
 ## AI Session Reports
 
-Create one database under `developer` as the human-friendly index of current work.
+`개발 (developer)` 아래에는 현재 작업의 사람 중심 인덱스로 `AI 세션 리포트 (AI Session Reports)` DB를 둔다.
 
 Suggested properties:
 
@@ -204,11 +205,11 @@ Each row page should use the Work Surface template.
 
 ## Projects And Documents
 
-Under `개발 (developer)`, separate object types explicitly.
+`개발 (developer)` 아래에서는 객체 종류를 분명하게 나눈다.
 
 - Projects belong to a `프로젝트 (Projects)` table DB.
 - Documents belong to a `문서 (Documents)` table DB or an equivalent document-only surface.
-- Shared databases such as `AI Session Reports` should stay in their own database section and must not be mixed into project lists.
+- `AI 세션 리포트 (AI Session Reports)` 같은 공용 DB는 별도 섹션에 두고 프로젝트 목록과 섞지 않는다.
 
 Project rules:
 
@@ -224,14 +225,22 @@ Document rules:
 
 ## Naming Rules
 
-- use the real live page names from the workspace
-- prefer breadcrumb notation like `대시보드 (dashboard) > 개발 (developer) > ...` in docs
-- keep project display titles stable once chosen
-- keep `current`, `reports`, and `check log` as fixed functional page names
-- use the live page name `family` for the current structure
+- 워크스페이스의 실제 live 페이지 이름을 문서 기준으로 쓴다.
+- 문서 안의 경로 표기는 `대시보드 (dashboard) > 개발 (developer) > ...` 같은 breadcrumb 표기를 우선한다.
+- 프로젝트 표시 이름은 한 번 정하면 쉽게 바꾸지 않는다.
+- 기능 페이지 이름도 영어 단독으로 두지 않고 한글 우선-영문 병기로 고정한다.
+- 현재 구조의 민감 개인 섹션 이름은 live 이름인 `family`를 유지한다.
 
-Page title style itself is owned by `docs/notion-obsidian-style-guide.md`.
-This file only locks which live route names are operationally fixed.
+기능 페이지 기본 이름은 아래를 기준으로 고정한다.
+
+- `운영 센터 (Ops Center)`
+- `현재 상태 (current)`
+- `진행 기록 (reports)`
+- `점검 기록 (check log)`
+- `운영 로그 (ops log)`
+- `기준 자료 (references)`
+
+페이지 제목 스타일의 세부 규칙은 `docs/notion-obsidian-style-guide.md`가 맡고, 이 문서는 live route 이름과 운영 계약만 잠근다.
 
 ## Status Signal Rule
 
@@ -250,12 +259,12 @@ Automation should prefer native Notion icons with color when the API path suppor
 
 ## Visualization Rule
 
-Use Notion-native visualisation first.
+시각화는 노션 기본 기능을 먼저 쓴다.
 
-- use `Progress %` and `Status` properties so chart views can be added inside Notion
-- use a short text progress bar in the page body for immediate readability
-- add a small structure map on hub or manual pages when the page explains information architecture
-- avoid external plugins unless Notion-native chart views are insufficient
+- `Progress %`와 `Status` 속성을 유지해 chart view를 노션 안에서 바로 붙일 수 있게 한다.
+- 페이지 본문에는 짧은 텍스트 진행 바를 남겨 첫 화면에서 상태를 읽게 한다.
+- 허브나 매뉴얼 페이지가 정보 구조를 설명할 때는 작은 구조도를 함께 둔다.
+- 노션 기본 chart view가 부족하지 않은 한 외부 플러그인에 의존하지 않는다.
 
 ### Chart View Rule
 

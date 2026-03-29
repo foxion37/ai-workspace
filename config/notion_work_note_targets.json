@@ -1,12 +1,12 @@
 {
   "ops": {
     "page_id": "330883f1-56f5-81fd-9a10-ce37eeac532f",
-    "route": "대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > ops log"
+    "route": "대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > 운영 로그 (ops log)"
   },
   "ops_center": {
     "page_id": "331883f1-56f5-81ba-a38e-f4170acc53dc",
-    "route": "대시보드 (dashboard) > Ops Center",
-    "title": "Ops Center"
+    "route": "대시보드 (dashboard) > 운영 센터 (Ops Center)",
+    "title": "운영 센터 (Ops Center)"
   },
   "projects": {
     "ai-glossary": {
@@ -15,9 +15,9 @@
       "hub_page_id": "331883f1-56f5-8150-be3d-c1e2a8afde4e",
       "reports_page_id": "331883f1-56f5-81cc-8b7d-ef5219d7c185",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > AI Glossary",
+      "route": "대시보드 (dashboard) > 개발 (developer) > AI 용어집 (AI Glossary)",
       "template": "current/reports/check log",
-      "title": "AI Glossary"
+      "title": "AI 용어집 (AI Glossary)"
     },
     "ai-workspace": {
       "check_log_page_id": "332883f1-56f5-8192-aae8-e49f6194097a",
@@ -25,9 +25,9 @@
       "hub_page_id": "332883f1-56f5-81d3-a9dd-dbaa8ea33796",
       "reports_page_id": "332883f1-56f5-81c5-b9a7-f5628a78ce5d",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > AI Workspace",
+      "route": "대시보드 (dashboard) > 개발 (developer) > AI 워크스페이스 (AI Workspace)",
       "template": "current/reports/check log",
-      "title": "AI Workspace"
+      "title": "AI 워크스페이스 (AI Workspace)"
     },
     "economy-content-agent": {
       "check_log_page_id": "331883f1-56f5-8119-a850-e81cf49576ad",
@@ -45,9 +45,9 @@
       "hub_page_id": "331883f1-56f5-8124-b390-e5b60a23c3f8",
       "reports_page_id": "331883f1-56f5-81e9-9370-e92280cc7ce2",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > Linkbot",
+      "route": "대시보드 (dashboard) > 개발 (developer) > 링크봇 (Linkbot)",
       "template": "current/reports/check log",
-      "title": "Linkbot"
+      "title": "링크봇 (Linkbot)"
     },
     "notion-structure-ops": {
       "check_log_page_id": "331883f1-56f5-81be-82bf-ff8e537b1f7b",
@@ -67,7 +67,7 @@
   },
   "session_reports": {
     "database_id": "331883f1-56f5-812e-ab30-e6a4c7a403cb",
-    "route": "대시보드 (dashboard) > 개발 (developer) > AI Session Reports",
-    "title": "AI Session Reports"
+    "route": "대시보드 (dashboard) > 개발 (developer) > AI 세션 리포트 (AI Session Reports)",
+    "title": "AI 세션 리포트 (AI Session Reports)"
   }
 }

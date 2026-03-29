@@ -20,9 +20,9 @@ It should not become a dump of raw logs.
 The standard project surface is:
 
 - hub page for orientation
-- `current` as the source of truth
-- `reports` for dated snapshots
-- `check log` for checks and follow-up
+- `현재 상태 (current)` as the source of truth
+- `진행 기록 (reports)` for dated snapshots
+- `점검 기록 (check log)` for checks and follow-up
 
 This standard is fixed before live Notion rollout work.
 
@@ -31,10 +31,10 @@ This standard is fixed before live Notion rollout work.
 Recommended structure:
 
 - project hub page
-- `current`
-- `reports`
-- `check log`
-- `references` when needed
+- `현재 상태 (current)`
+- `진행 기록 (reports)`
+- `점검 기록 (check log)`
+- `기준 자료 (references)` when needed
 
 ### Project hub page
 
@@ -47,7 +47,7 @@ It should explain:
 - where dated reports go
 - where check items go
 
-### `current`
+### `현재 상태 (current)`
 
 This is the live dashboard page.
 
@@ -77,7 +77,7 @@ Rules:
 - use links for detail, not pasted raw logs
 - do not move shared ops policy or multi-repo automation notes into this page
 
-### `reports`
+### `진행 기록 (reports)`
 
 Use this for dated work notes and snapshots.
 
@@ -85,10 +85,10 @@ Rules:
 
 - store time-stamped notes only
 - do not use it as the current dashboard
-- link back to `current` when the snapshot changes active status
+- link back to `현재 상태 (current)` when the snapshot changes active status
 - treat local work-note Markdown as the canonical long-form source when more detail is needed
 
-### `check log`
+### `점검 기록 (check log)`
 
 Use this for checks, audits, review items, and follow-ups.
 
@@ -138,7 +138,7 @@ See `docs/notion-obsidian-style-guide.md` for the style-layer rules.
 
 Project hubs are for project-scoped state only.
 
-- send shared ops, `.orchestra`, NAS, launchd, or cross-repo automation updates to `ops log`
+- send shared ops, `.orchestra`, NAS, launchd, or cross-repo automation updates to `운영 로그 (ops log)`
 - send project focus, blockers, reports, and checks to the matching project hub
 - when the route is ambiguous, prefer `ops` for shared infrastructure and `project` for product/workstream state
 

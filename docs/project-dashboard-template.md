@@ -2,7 +2,7 @@
 
 This document provides copy-ready starter text for project hubs under `대시보드 (dashboard) > 개발 (developer)`.
 
-Use it when a repo needs the standard `current`, `reports`, and `check log` surfaces but the Notion pages are not created yet.
+Use it when a repo needs the standard `현재 상태 (current)`, `진행 기록 (reports)`, and `점검 기록 (check log)` surfaces but the Notion pages are not created yet.
 
 ## Rollout Status
 
@@ -20,22 +20,22 @@ Until a project gets its Notion page IDs, `session_work_note.py` keeps the local
 
 이 페이지는 프로젝트 허브다.
 
-- live status: `current`
-- dated snapshots: `reports`
-- checks and follow-up: `check log`
-- references: 필요할 때만 추가
+- live status: `현재 상태 (current)`
+- dated snapshots: `진행 기록 (reports)`
+- checks and follow-up: `점검 기록 (check log)`
+- references: `기준 자료 (references)`가 필요할 때만 추가
 
-현재 상태는 `current`에서 보고, 기록성 메모는 `reports`로 보낸다.
+현재 상태는 `현재 상태 (current)`에서 보고, 기록성 메모는 `진행 기록 (reports)`로 보낸다.
 ```
 
-## `current` Template
+## `현재 상태 (current)` Template
 
 ```md
-# current
+# 현재 상태 (current)
 
-> This page is the live dashboard.
-> Status changes belong here first.
-> Long logs stay in local Markdown and are linked, not pasted.
+> 이 페이지는 live dashboard다.
+> 상태 변화는 이 페이지에 먼저 반영한다.
+> 긴 로그는 로컬 Markdown에 두고 링크만 남긴다.
 
 ## 목표
 - <project goal>
@@ -84,10 +84,10 @@ Notes:
 - Keep `current`, `reports`, and `check log` as fixed functional page names.
 - In Notion, write body copy in Korean-first style.
 
-## `reports` Template
+## `진행 기록 (reports)` Template
 
 ```md
-# reports
+# 진행 기록 (reports)
 
 이 페이지는 날짜 기준 스냅샷만 둔다.
 
@@ -97,10 +97,10 @@ Notes:
 - active status가 바뀌면 `current`도 같이 갱신
 ```
 
-## `check log` Template
+## `점검 기록 (check log)` Template
 
 ```md
-# check log
+# 점검 기록 (check log)
 
 이 페이지는 health check, review, audit, follow-up만 둔다.
 

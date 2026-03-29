@@ -15,9 +15,9 @@ Use this file for naming, icon, heading, link, tag, and emphasis rules.
 
 ### Notion
 
-Use Korean-first page titles with optional English labels for search and agent readability.
+Use Korean-first page titles with English labels in parentheses for search and agent readability.
 Body copy should also default to Korean-first.
-Keep fixed functional page names in English, but write section headings and explanatory text in Korean unless a literal product label must stay in English.
+Fixed functional page names should follow the same Korean-first bilingual rule.
 
 Recommended format:
 
@@ -32,15 +32,15 @@ Top-level functional and area pages should use Korean-first bilingual titles:
 
 - `대시보드 (dashboard)`
 - `개발 (developer)`
-- `운영 센터 (Ops Center)` when renamed, or `Ops Center` until migration completes
+- `운영 센터 (Ops Center)`
 
-Slot page names stay in English:
+Functional page names also use Korean-first bilingual titles:
 
-- `current`
-- `reports`
-- `check log`
-- `ops log`
-- `references`
+- `현재 상태 (current)`
+- `진행 기록 (reports)`
+- `점검 기록 (check log)`
+- `운영 로그 (ops log)`
+- `기준 자료 (references)`
 
 ### Obsidian
 
