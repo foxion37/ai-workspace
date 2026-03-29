@@ -16,6 +16,8 @@ Use this file for naming, icon, heading, link, tag, and emphasis rules.
 ### Notion
 
 Use Korean-first page titles with optional English labels for search and agent readability.
+Body copy should also default to Korean-first.
+Keep fixed functional page names in English, but write section headings and explanatory text in Korean unless a literal product label must stay in English.
 
 Recommended format:
 
@@ -26,11 +28,14 @@ Examples:
 - `노션 운영 매뉴얼 (notion manual)`
 - `대시보드 보수 체크리스트 (maintenance checklist)`
 
-Fixed functional page names stay in English:
+Top-level functional and area pages should use Korean-first bilingual titles:
 
-- `dashboard`
-- `developer`
-- `Ops Center`
+- `대시보드 (dashboard)`
+- `개발 (developer)`
+- `운영 센터 (Ops Center)` when renamed, or `Ops Center` until migration completes
+
+Slot page names stay in English:
+
 - `current`
 - `reports`
 - `check log`
@@ -49,6 +54,7 @@ Recommended format:
 - `session-report-2026-03-29`
 
 If a human-friendly Korean label matters later, store it in note body or frontmatter, not in the filename.
+Obsidian body text may be bilingual when needed, but the filename remains English-first.
 
 ### Version And Date Labels
 

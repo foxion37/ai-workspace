@@ -1,0 +1,30 @@
+{
+  "name": "ai-workspace",
+  "version": "1.0.0",
+  "description": "이 저장소는 코드와 디렉토리 구조만 관리한다.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "diagnose:notion": "python3 ./scripts/diagnose_notion_runtime.py",
+    "probe:notion-chart": "node ./scripts/notion_chart_probe.mjs",
+    "probe:notion-chart:headless": "node ./scripts/notion_chart_probe.mjs --headless",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foxion37/ai-workspace.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/foxion37/ai-workspace/issues"
+  },
+  "homepage": "https://github.com/foxion37/ai-workspace#readme",
+  "devDependencies": {
+    "playwright": "^1.58.2"
+  }
+}

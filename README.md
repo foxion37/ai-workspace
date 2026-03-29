@@ -17,6 +17,7 @@
 - [Project Dashboard Standard](docs/project-dashboard-standard.md)
 - [Project Dashboard Template Pack](docs/project-dashboard-template.md)
 - [Session Commands](docs/session-commands.md)
+- [Notion MCP Runtime Diagnosis](docs/notion-mcp-runtime-diagnosis-2026-03-29.md)
 
 ## 운영 원칙
 

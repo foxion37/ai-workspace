@@ -17,6 +17,10 @@ The first screen should answer:
 This standard is for people first.
 Agents may read it, but the layout should not assume technical fluency.
 
+Notion page body text should default to Korean-first.
+Top-level area pages should use Korean-first bilingual names.
+Only slot pages such as `current`, `reports`, and `check log` stay in English.
+
 ## Core Pattern
 
 Use this order on human entry pages:
@@ -37,7 +41,7 @@ Do not add a separate `Summary` heading unless the page needs a longer explanato
 
 ### Hub
 
-Use for `dashboard`, `developer`, `work`, and other human entry pages.
+Use for `대시보드 (dashboard)`, `개발 (developer)`, `업무 (work)`, and other human entry pages.
 
 Show:
 
@@ -159,10 +163,10 @@ Suggested contents:
 Do not break old routes immediately.
 Expose the new category first, then migrate links.
 
-Treat the following as fixed functional page names in Notion:
+Treat the following as stable live names in Notion:
 
-- `dashboard`
-- `developer`
+- `대시보드 (dashboard)`
+- `개발 (developer)`
 - `Ops Center`
 - `current`
 - `reports`
@@ -198,10 +202,30 @@ Suggested views:
 
 Each row page should use the Work Surface template.
 
+## Projects And Documents
+
+Under `개발 (developer)`, separate object types explicitly.
+
+- Projects belong to a `프로젝트 (Projects)` table DB.
+- Documents belong to a `문서 (Documents)` table DB or an equivalent document-only surface.
+- Shared databases such as `AI Session Reports` should stay in their own database section and must not be mixed into project lists.
+
+Project rules:
+
+- every active developer project should have one row in `프로젝트 (Projects)`
+- every project row should link to its hub page and `current / reports / check log`
+- project hubs are human entry pages, but the DB row is the canonical index
+
+Document rules:
+
+- reference pages, manuals, intake pages, and dated writeups are documents, not projects
+- document hubs should not be presented as project hubs
+- names should make the document role explicit, such as `공용 문서 (shared documents)`
+
 ## Naming Rules
 
 - use the real live page names from the workspace
-- prefer breadcrumb notation like `dashboard > developer > ...` in docs
+- prefer breadcrumb notation like `대시보드 (dashboard) > 개발 (developer) > ...` in docs
 - keep project display titles stable once chosen
 - keep `current`, `reports`, and `check log` as fixed functional page names
 - use the live page name `family` for the current structure
@@ -223,6 +247,49 @@ Only use color when the page must signal active status.
 
 The exact color policy and emoji limits live in `docs/notion-obsidian-style-guide.md`.
 Automation should prefer native Notion icons with color when the API path supports them.
+
+## Visualization Rule
+
+Use Notion-native visualisation first.
+
+- use `Progress %` and `Status` properties so chart views can be added inside Notion
+- use a short text progress bar in the page body for immediate readability
+- add a small structure map on hub or manual pages when the page explains information architecture
+- avoid external plugins unless Notion-native chart views are insufficient
+
+### Chart View Rule
+
+Treat chart views as a UI-managed summary layer on top of `AI Session Reports`.
+
+Required chart views:
+
+- `상태 분포 (차트)`: donut chart grouped by `Status`
+- `진척도 비교 (차트)`: bar chart using `Project / Session` and `Progress %`
+
+Placement rule:
+
+- keep the canonical chart views inside `AI Session Reports`
+- mirror them into `Ops Center` or `current` only as linked views if they improve first-screen readability
+- do not replace `current` text status with charts alone
+
+Operating rule:
+
+- chart views are user-managed in the live Notion UI
+- agents should not treat chart creation or chart layout control as a required automation target
+- agents are responsible for keeping the chart input data truthful: `Status`, `Progress %`, `Project / Session`, `Agent`, and `Last Updated`
+- if chart automation is not trustworthy, stop at DB health and text progress bars instead of trying to force UI control
+- chart view names should stay stable once chosen so humans and agents refer to the same surface
+
+## Freshness Rule
+
+Treat freshness as a content check, not just a sync check.
+
+- update the local work note first, then refresh the matching human-facing Notion surface
+- for `ops` routing, refresh `ops log` first and then any shared status surface such as `Ops Center` or `AI Session Reports`
+- for project routing, refresh `current` first, then `reports` or `check log` if the session changed user-visible state
+- `queue empty` does not mean the surface is fresh; compare the latest local note against `current`, `reports`, `check log`, and session-report rows
+- duplicate session rows, stale progress values, or missing required DB properties count as structure drift and should activate `Maintenance` plus `Development`
+- missing chart views must not block a truthful `current` page, report entry, or check-log item
 
 ## Notion Notes
 

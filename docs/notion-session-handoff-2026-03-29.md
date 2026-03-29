@@ -31,6 +31,24 @@ Use this cadence by default:
    - `Growth` for repeated navigation or adoption problems
 5. Do not turn Notion into a raw session log dump.
 
+## Known Drift To Check First
+
+- `queue empty` may still hide stale human-facing pages.
+- `dashboard > developer > 노션 구조 정리 > current` was last seen with `35%` progress and an older next-step line.
+- `dashboard > developer > 노션 구조 정리` hub was last seen with the same stale `35%` progress bar.
+- `AI Session Reports` may contain duplicate bootstrap rows for the same local source.
+- `AI Session Reports` should be checked for duplicate rows, missing `Project / Session`, and stale `Progress %` before any chart-dependent reading.
+
+## Session Update
+
+- Route stayed `ops`.
+- Activated roles: `Operations`, `Maintenance`, `Development`.
+- `Ops Center`, `노션 구조 정리`, `current`, `reports`, `check log` were refreshed to reflect the latest human-facing state.
+- `AI Session Reports` now includes `Project / Session`, the duplicate `2026-03-28` rows were reduced to one historical row, and a new `2026-03-29` row was added.
+- Browser automation did not become a trustworthy chart-control path. The dedicated probe still hit the sign-in gate or unstable session state.
+- Chart views are now treated as explicitly user-managed. Keep the standard names `상태 분포 (차트)` and `진척도 비교 (차트)` when the user creates or adjusts them inside `AI Session Reports`.
+- The next agent should focus on DB health and human-facing freshness, not on chart automation.
+
 ## Prompt For The Next Agent
 
 ```text
@@ -42,6 +60,8 @@ Check for local/Notion mismatch, queue backlog, and any stale current/report/che
 Only activate Maintenance, Development, or Growth if the signal requires it.
 
 Keep local docs canonical. Notion should mirror human-readable status, not raw logs.
+Treat chart views as user-managed UI surfaces. Do not spend the session trying to automate chart creation unless the user explicitly reopens that workstream.
+Keep `AI Session Reports` healthy enough that the user-controlled charts stay readable.
 Before making structural changes, record the rule locally.
 At the end, leave a short update in local notes and identify any remaining backlog for the next session.
 ```

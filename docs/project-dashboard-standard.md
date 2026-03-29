@@ -155,6 +155,7 @@ Until auth and page IDs are ready everywhere:
 
 Known developer project rollout targets now include:
 
+- `ai-workspace`
 - `economy-content-agent` as the live reference implementation
 - `ai-glossary`
 - `linkbot`

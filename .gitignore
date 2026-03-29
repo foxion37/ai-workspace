@@ -6,6 +6,7 @@ temp/
 tmp/
 cache/
 .cache/
+node_modules/
 
 # Environment secrets
 .env

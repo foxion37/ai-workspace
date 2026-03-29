@@ -60,7 +60,7 @@ Examples:
 
 Target:
 
-- the matching page under `dashboard > developer > <project>`
+- the matching page under `대시보드 (dashboard) > 개발 (developer) > <project>`
 
 Use when:
 
@@ -158,14 +158,16 @@ If Notion sync fails:
 
 ## Current default mapping
 
-- ops / home ops / `.orchestra` / `home-dev-infra` / `ai-workspace` / `.dotfiles`
-  - `dashboard > notion manual 1.0 > ops log`
+- ops / home ops / `.orchestra` / `home-dev-infra` / `.dotfiles`
+  - `대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > ops log`
+- `ai-workspace`
+  - `대시보드 (dashboard) > 개발 (developer) > AI Workspace`
 - `economy-content-agent`
-  - `dashboard > developer > 경제 콘텐츠 분석`
+  - `대시보드 (dashboard) > 개발 (developer) > 경제 콘텐츠 분석`
 - `ai-glossary`
-  - `dashboard > developer > ai-glossary`
+  - `대시보드 (dashboard) > 개발 (developer) > AI Glossary`
 - `linkbot`
-  - `dashboard > developer > linkbot`
+  - `대시보드 (dashboard) > 개발 (developer) > Linkbot`
 
 Archived projects such as `ai-web-project` are excluded from active project routing.
 Keep their Notion pages as read-only historical references, but do not queue new project work notes for them.

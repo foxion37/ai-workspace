@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import socket
 import subprocess
 import sys
 import time
@@ -32,6 +33,12 @@ SESSION_REPORT_INDEX_PATH = SESSION_REPORT_DIR / "INDEX.md"
 
 IMPORTANT_TASK_STATUSES = {"blocked", "done", "self_review", "claude_review"}
 OPEN_INCIDENT_STATUSES = {"open", "investigating", "blocked", "monitoring"}
+
+
+def progress_bar(percent: int, width: int = 10) -> str:
+    clamped = max(0, min(100, percent))
+    filled = round((clamped / 100) * width)
+    return "[" + ("#" * filled) + ("-" * (width - filled)) + f"] {clamped}%"
 
 
 @dataclass
@@ -344,7 +351,7 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
             kind="project",
             scope_slug=slugify(repo_name),
             scope_title=project.get("title", repo_name),
-            notion_target=project.get("route", f"dashboard > developer > {repo_name}"),
+            notion_target=project.get("route", f"대시보드 (dashboard) > 개발 (developer) > {repo_name}"),
             project_hub_page_id=project.get("hub_page_id"),
             dashboard_page_id=project.get("dashboard_page_id"),
             reports_page_id=project.get("reports_page_id"),
@@ -356,7 +363,7 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
             kind="project",
             scope_slug=slugify(repo_name),
             scope_title=repo_name,
-            notion_target=f"dashboard > developer > {repo_name}",
+            notion_target=f"대시보드 (dashboard) > 개발 (developer) > {repo_name}",
         )
 
     return RouteInfo(
@@ -662,18 +669,27 @@ def notion_request(method: str, url: str, body: dict[str, Any] | None = None, ve
     token = os.environ.get("NOTION_API_KEY")
     if not token:
         raise RuntimeError("NOTION_API_KEY missing")
-    req = request.Request(
-        url,
-        data=json.dumps(body).encode("utf-8") if body is not None else None,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Notion-Version": version,
-            "Content-Type": "application/json",
-        },
-        method=method,
-    )
-    with request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    last_error: Exception | None = None
+    for attempt in range(3):
+        req = request.Request(
+            url,
+            data=json.dumps(body).encode("utf-8") if body is not None else None,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Notion-Version": version,
+                "Content-Type": "application/json",
+            },
+            method=method,
+        )
+        try:
+            with request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except socket.timeout as exc:
+            last_error = exc
+            if attempt == 2:
+                raise
+            time.sleep(2 * (attempt + 1))
+    raise last_error or RuntimeError("unknown Notion request error")
 
 
 def build_paragraph_block(text: str) -> dict[str, Any]:
@@ -818,21 +834,23 @@ def build_notion_markdown(note: dict[str, Any]) -> str:
     checklist = "\n".join(note.get("checklist", [])[:6]) or "- [ ] checklist not linked"
     issues = "\n".join(f"- {item}" for item in note.get("open_issues", [])[:4]) or "- none"
     human = "\n".join(f"- {item}" for item in note.get("human_guidance", [])[:4]) or "- none"
+    bar = progress_bar(note.get("progress", 0))
     return (
-        "> This page is the live human-readable status mirror.\n\n"
-        f"## Goal\n- {note.get('goal', 'Goal not set')}\n\n"
-        f"## Purpose\n- {note.get('purpose', 'Purpose not set')}\n\n"
-        f"## Status\n- Status: {status_label(note['status'])}\n- Progress: {note.get('progress', 0)}%\n- Route: {note['notion_target']}\n\n"
-        f"## Owner\n- Codex\n\n"
-        f"## Next Step\n- {note['next_step']}\n\n"
-        f"## Last Updated\n- {note['date_updated']}\n\n"
-        f"## Current Focus\n- {note.get('current_focus', 'Current focus not set')}\n\n"
-        f"## Active Work\n{active}\n\n"
-        f"## Checklist\n{checklist}\n\n"
-        f"## Open Issues\n{issues}\n\n"
-        f"## Canonical Links\n{refs}\n\n"
-        f"## For Human\n{human}\n\n"
-        f"## Situation\n- {note['situation']}\n"
+        "> 이 페이지는 사람 기준 상태 미러다.\n\n"
+        f"## 목표\n- {note.get('goal', '목표 미설정')}\n\n"
+        f"## 목적\n- {note.get('purpose', '목적 미설정')}\n\n"
+        f"## 상태\n- 상태: {status_label(note['status'])}\n- 진행률: {note.get('progress', 0)}%\n- 경로: {note['notion_target']}\n\n"
+        f"## 담당\n- Codex\n\n"
+        f"## 다음 단계\n- {note['next_step']}\n\n"
+        f"## 마지막 업데이트\n- {note['date_updated']}\n\n"
+        f"## 진척도 시각화\n- {bar}\n\n"
+        f"## 현재 초점\n- {note.get('current_focus', '현재 초점 미설정')}\n\n"
+        f"## 진행 작업\n{active}\n\n"
+        f"## 체크리스트\n{checklist}\n\n"
+        f"## 열린 이슈\n{issues}\n\n"
+        f"## 기준 링크\n{refs}\n\n"
+        f"## 사람용 메모\n{human}\n\n"
+        f"## 상황\n- {note['situation']}\n"
     )
 
 

@@ -18,14 +18,17 @@ FILES_TO_SCAN = [
 ]
 
 FIXED_FUNCTIONAL_NAMES = {
-    "dashboard",
-    "developer",
     "Ops Center",
     "current",
     "reports",
     "check log",
     "ops log",
     "references",
+}
+
+REQUIRED_BILINGUAL_TITLES = {
+    "대시보드 (dashboard)",
+    "개발 (developer)",
 }
 
 
@@ -63,6 +66,9 @@ def main() -> int:
             for fixed_name in sorted(FIXED_FUNCTIONAL_NAMES):
                 if f"`{fixed_name}`" not in text:
                     warnings.append(f"[warn] fixed functional name not listed in manual: {fixed_name}")
+            for title in sorted(REQUIRED_BILINGUAL_TITLES):
+                if title not in text:
+                    findings.append(f"[error] missing bilingual top-level title in manual: {title}")
 
     if findings:
         print("\n".join(findings + warnings))

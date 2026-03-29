@@ -1,11 +1,12 @@
 # Project Dashboard Template Pack
 
-This document provides copy-ready starter text for project hubs under `dashboard > developer`.
+This document provides copy-ready starter text for project hubs under `대시보드 (dashboard) > 개발 (developer)`.
 
 Use it when a repo needs the standard `current`, `reports`, and `check log` surfaces but the Notion pages are not created yet.
 
 ## Rollout Status
 
+- `ai-workspace` -> rollout pending
 - `economy-content-agent` -> live, page IDs configured
 - `ai-glossary` -> template pending, page IDs missing
 - `linkbot` -> template pending, page IDs missing
@@ -36,41 +37,43 @@ Until a project gets its Notion page IDs, `session_work_note.py` keeps the local
 > Status changes belong here first.
 > Long logs stay in local Markdown and are linked, not pasted.
 
-## Goal
+## 목표
 - <project goal>
 
-## Purpose
+## 목적
 - <why this project exists>
 
-## Status
+## 상태
 - <in_progress | blocked | monitoring | done>
 
-## Owner
+## 담당
 - <owner>
 
-## Next Step
+## 다음 단계
 - <next concrete action>
 
-## Last Updated
+## 마지막 업데이트
 - <YYYY-MM-DD HH:MM TZ>
 
-## Progress %
+## 진척도
 - <0-100 or manual note>
+- <[####------] 40%>
 
-## Todo Checklist
-- [ ] <next task>
-- [ ] <next task>
-
-## Current Focus
+## 현재 초점
 - <active focus>
 
-## Open Issues
+## 진행 작업
+- <active work item>
+- <active work item>
+
+## 체크리스트
+- [ ] <next task>
+- [ ] <next task>
+
+## 열린 이슈
 - <open blocker or monitoring item>
 
-## References
-- <canonical doc or repo>
-
-## Canonical Links
+## 기준 링크
 - <local source of truth or key report path>
 ```
 
@@ -79,6 +82,7 @@ Notes:
 - In Notion, the page title already acts as `H1`; keep body headings at `H2`.
 - Use the intro callout as the summary surface.
 - Keep `current`, `reports`, and `check log` as fixed functional page names.
+- In Notion, write body copy in Korean-first style.
 
 ## `reports` Template
 
