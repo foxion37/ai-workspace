@@ -19,16 +19,6 @@
       "template": "current/reports/check log",
       "title": "AI Glossary"
     },
-    "ai-web-project": {
-      "check_log_page_id": "331883f1-56f5-810b-88d8-c01f51b97574",
-      "dashboard_page_id": "331883f1-56f5-810b-881b-f0c20e3a85a8",
-      "hub_page_id": "331883f1-56f5-8130-9e59-cc1da0707c08",
-      "reports_page_id": "331883f1-56f5-817d-a9bc-d0c26d3b0fd8",
-      "rollout_status": "live",
-      "route": "dashboard > developer > AI Web Project",
-      "template": "current/reports/check log",
-      "title": "AI Web Project"
-    },
     "economy-content-agent": {
       "check_log_page_id": "331883f1-56f5-8119-a850-e81cf49576ad",
       "dashboard_page_id": "331883f1-56f5-814a-9590-d5a7194a9a45",

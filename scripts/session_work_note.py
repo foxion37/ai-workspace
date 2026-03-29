@@ -683,6 +683,48 @@ def build_paragraph_block(text: str) -> dict[str, Any]:
     }
 
 
+def build_quote_block(text: str) -> dict[str, Any]:
+    return {
+        "object": "block",
+        "type": "quote",
+        "quote": {
+            "rich_text": [{"type": "text", "text": {"content": text[:1900]}}],
+        },
+    }
+
+
+def build_heading_block(level: int, text: str) -> dict[str, Any]:
+    block_type = f"heading_{level}"
+    return {
+        "object": "block",
+        "type": block_type,
+        block_type: {
+            "rich_text": [{"type": "text", "text": {"content": text[:1900]}}],
+        },
+    }
+
+
+def build_bulleted_block(text: str) -> dict[str, Any]:
+    return {
+        "object": "block",
+        "type": "bulleted_list_item",
+        "bulleted_list_item": {
+            "rich_text": [{"type": "text", "text": {"content": text[:1900]}}],
+        },
+    }
+
+
+def build_todo_block(text: str, checked: bool) -> dict[str, Any]:
+    return {
+        "object": "block",
+        "type": "to_do",
+        "to_do": {
+            "checked": checked,
+            "rich_text": [{"type": "text", "text": {"content": text[:1900]}}],
+        },
+    }
+
+
 def page_title_payload(title: str) -> dict[str, Any]:
     return {
         "title": {
@@ -707,11 +749,31 @@ def clear_page_children(page_id: str) -> None:
 
 def replace_page_children(page_id: str, content_markdown: str) -> None:
     clear_page_children(page_id)
-    blocks = [
-        build_paragraph_block(line)
-        for line in content_markdown.splitlines()
-        if line.strip()
-    ]
+    blocks: list[dict[str, Any]] = []
+    for raw_line in content_markdown.splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("> "):
+            blocks.append(build_quote_block(stripped[2:].strip()))
+            continue
+        if stripped.startswith("## "):
+            blocks.append(build_heading_block(2, stripped[3:].strip()))
+            continue
+        if stripped.startswith("### "):
+            blocks.append(build_heading_block(3, stripped[4:].strip()))
+            continue
+        if stripped.startswith("- [ ] "):
+            blocks.append(build_todo_block(stripped[6:].strip(), checked=False))
+            continue
+        if stripped.startswith("- [x] "):
+            blocks.append(build_todo_block(stripped[6:].strip(), checked=True))
+            continue
+        if stripped.startswith("- "):
+            blocks.append(build_bulleted_block(stripped[2:].strip()))
+            continue
+        blocks.append(build_paragraph_block(stripped))
     if blocks:
         notion_request(
             "PATCH",
@@ -727,17 +789,20 @@ def build_notion_markdown(note: dict[str, Any]) -> str:
     issues = "\n".join(f"- {item}" for item in note.get("open_issues", [])[:4]) or "- none"
     human = "\n".join(f"- {item}" for item in note.get("human_guidance", [])[:4]) or "- none"
     return (
+        "> This page is the live human-readable status mirror.\n\n"
         f"## Goal\n- {note.get('goal', 'Goal not set')}\n\n"
         f"## Purpose\n- {note.get('purpose', 'Purpose not set')}\n\n"
-        f"## Current Board\n- Status: {status_label(note['status'])}\n- Progress: {note.get('progress', 0)}%\n- Route: {note['notion_target']}\n\n"
-        f"## Situation\n- {note['situation']}\n\n"
+        f"## Status\n- Status: {status_label(note['status'])}\n- Progress: {note.get('progress', 0)}%\n- Route: {note['notion_target']}\n\n"
+        f"## Owner\n- Codex\n\n"
+        f"## Next Step\n- {note['next_step']}\n\n"
+        f"## Last Updated\n- {note['date_updated']}\n\n"
         f"## Current Focus\n- {note.get('current_focus', 'Current focus not set')}\n\n"
         f"## Active Work\n{active}\n\n"
         f"## Checklist\n{checklist}\n\n"
         f"## Open Issues\n{issues}\n\n"
+        f"## Canonical Links\n{refs}\n\n"
         f"## For Human\n{human}\n\n"
-        f"## References\n{refs}\n\n"
-        f"## Next Step\n- {note['next_step']}\n"
+        f"## Situation\n- {note['situation']}\n"
     )
 
 

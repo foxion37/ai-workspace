@@ -53,18 +53,24 @@ This is the live dashboard page.
 
 Required sections:
 
+- intro callout
 - Goal
 - Purpose
 - Status
+- Owner
+- Next Step
+- Last Updated
 - Progress %
 - Todo Checklist
 - Current Focus
 - Open Issues
 - References
-- Next Step
+- Canonical Links
 
 Rules:
 
+- in Notion, treat the page title as `H1` and start body headings at `H2`
+- keep the intro callout as the summary surface
 - keep only the latest valid state
 - overwrite stale status instead of stacking snapshots
 - show only open blockers and active watch items
@@ -125,6 +131,9 @@ Keep dashboard text short.
 - details by link
 - latest valid state only
 
+Use the full operating metadata contract where needed, but keep the visible top block compact for humans.
+See `docs/notion-obsidian-style-guide.md` for the style-layer rules.
+
 ## Routing Boundary
 
 Project hubs are for project-scoped state only.
@@ -148,7 +157,6 @@ Known developer project rollout targets now include:
 
 - `economy-content-agent` as the live reference implementation
 - `ai-glossary`
-- `ai-web-project`
 - `linkbot`
 
 Projects without Notion page IDs should still follow the same local-first structure, but their work notes remain `notion_sync: not_configured` until the hub pages exist.

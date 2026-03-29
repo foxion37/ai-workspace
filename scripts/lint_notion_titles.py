@@ -12,9 +12,21 @@ FILES_TO_SCAN = [
     ROOT / "developer/projects/ai-workspace/docs/project-dashboard-standard.md",
     ROOT / "developer/projects/ai-workspace/docs/project-dashboard-template.md",
     ROOT / "developer/projects/ai-workspace/docs/notion-human-ops-standard.md",
+    ROOT / "developer/projects/ai-workspace/docs/notion-obsidian-style-guide.md",
     ROOT / "Downloads/NOTION_OPERATION_PLAN.md",
     ROOT / "developer/notion-auto-sync/docs/2026-03-21-notion-agent-design.md",
 ]
+
+FIXED_FUNCTIONAL_NAMES = {
+    "dashboard",
+    "developer",
+    "Ops Center",
+    "current",
+    "reports",
+    "check log",
+    "ops log",
+    "references",
+}
 
 
 def load_config() -> dict:
@@ -45,6 +57,12 @@ def main() -> int:
             warnings.append(f"[warn] slash route notation found: {path}")
         if "home-home" in text or "홈-home" in text:
             warnings.append(f"[warn] legacy family naming found: {path}")
+        if path.name == "notion-obsidian-style-guide.md" and "Do not use Korean-English bilingual titles by default." not in text:
+            findings.append(f"[error] missing Obsidian naming rule in style guide: {path}")
+        if path.name == "notion-human-ops-standard.md":
+            for fixed_name in sorted(FIXED_FUNCTIONAL_NAMES):
+                if f"`{fixed_name}`" not in text:
+                    warnings.append(f"[warn] fixed functional name not listed in manual: {fixed_name}")
 
     if findings:
         print("\n".join(findings + warnings))

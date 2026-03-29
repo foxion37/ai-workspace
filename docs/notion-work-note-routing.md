@@ -91,12 +91,15 @@ Required dashboard fields:
 - Goal
 - Purpose
 - Status
+- Owner
+- Next Step
+- Last Updated
 - Progress %
 - Todo Checklist
 - Current Focus
 - Open Issues
 - References
-- Next Step
+- Canonical Links
 
 Operational meaning:
 
@@ -104,6 +107,8 @@ Operational meaning:
 - `reports` holds dated snapshots only
 - `check log` holds checks, reviews, warnings, and follow-up items
 - raw logs stay local and are linked, not pasted
+- use an intro callout as the summary surface on Notion pages
+- in Notion body content, start at `H2` because the title already acts as `H1`
 
 ## Automation Rule
 
@@ -159,7 +164,8 @@ If Notion sync fails:
   - `dashboard > developer > 경제 콘텐츠 분석`
 - `ai-glossary`
   - `dashboard > developer > ai-glossary`
-- `ai-web-project`
-  - `dashboard > developer > ai-web-project`
 - `linkbot`
   - `dashboard > developer > linkbot`
+
+Archived projects such as `ai-web-project` are excluded from active project routing.
+Keep their Notion pages as read-only historical references, but do not queue new project work notes for them.

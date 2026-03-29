@@ -61,6 +61,10 @@ def bullet(text: str) -> dict:
     return text_block("bulleted_list_item", text)
 
 
+def callout(text: str) -> dict:
+    return text_block("quote", text)
+
+
 def title_property(title: str) -> dict:
     return {"title": [{"type": "text", "text": {"content": title[:180]}}]}
 
@@ -184,12 +188,47 @@ def update_config(ops_center_page_id: str, project_ids: dict[str, str], session_
 def main() -> int:
     load_env()
 
+    manual_blocks = [
+        callout("이 페이지는 노션 운영 계약의 정본이다. 스타일 세부 규칙은 notion-obsidian-style-guide 문서를 참조한다."),
+        text_block("heading_2", "Role Split"),
+        bullet("운영 계약: Zone, Lead, Approval, routing, source of truth."),
+        bullet("스타일 가이드: 제목, 아이콘, 헤딩, 링크, 태그, 강조."),
+        text_block("heading_2", "Fixed Functional Page Names"),
+        bullet("dashboard"),
+        bullet("developer"),
+        bullet("Ops Center"),
+        bullet("current"),
+        bullet("reports"),
+        bullet("check log"),
+        bullet("ops log"),
+        bullet("references"),
+        text_block("heading_2", "Page Surface Order"),
+        bullet("Hub: intro callout -> what this area is for -> start here -> child pages -> rules -> references."),
+        bullet("Current: intro callout -> Goal -> Purpose -> Status -> Owner -> Next Step -> Last Updated -> Current Focus -> Active Work -> Checklist -> Open Issues -> Canonical Links."),
+        bullet("Reports: intro callout -> entry format -> current linkage rule -> source-of-truth note."),
+        bullet("Check log: intro callout -> open item rule -> owner or next action -> archive rule."),
+        text_block("heading_2", "Status Signals"),
+        bullet("Gray: default."),
+        bullet("Orange: currently editing."),
+        bullet("Yellow: paused or waiting."),
+        bullet("Red: needs review now."),
+        bullet("Green: checked or stable."),
+        bullet("Blue: guide or reference."),
+        bullet("Light gray: archive or legacy."),
+        text_block("heading_2", "Heading Rule"),
+        bullet("In Notion, the page title already acts as H1."),
+        bullet("Body content starts at H2."),
+    ]
+    replace_page_content(MANUAL_PAGE_ID, manual_blocks)
+
     ops_center_blocks = [
-        text_block("quote", "이 페이지는 운영 매뉴얼, 운영 로그, 세션 리포트로 들어가는 사람 중심 운영 입구다."),
+        callout("이 페이지는 운영 매뉴얼, 운영 로그, 세션 리포트로 들어가는 사람 중심 운영 입구다."),
         text_block("heading_2", "Start Here"),
         bullet("운영 기준은 노션 운영 매뉴얼 (notion manual) 1.0에서 확인한다."),
         bullet("현재 운영 로그는 운영 로그 (ops log)에서 확인한다."),
         bullet("AI와 사람이 진행 중인 작업은 developer 아래 AI Session Reports DB에서 확인한다."),
+        text_block("heading_2", "Status Signal"),
+        bullet("중립 페이지는 회색 아이콘을 기본으로 쓰고, 상태 신호가 필요할 때만 컬러를 쓴다."),
         text_block("heading_2", "How It Works"),
         bullet("긴 로그보다 현재 상태, 막힌 점, 다음 액션을 먼저 본다."),
         bullet("프로젝트별 current / reports / check log 흐름은 developer 허브 표준을 따른다."),
@@ -198,7 +237,7 @@ def main() -> int:
     ops_center_page_id = ensure_page(DASHBOARD_ROOT_ID, "Ops Center", ops_center_blocks)
 
     hub_blocks = [
-        text_block("quote", "이 페이지는 노션 구조 정리 세션의 프로젝트 허브다."),
+        callout("이 페이지는 노션 구조 정리 세션의 프로젝트 허브다."),
         text_block("heading_2", "무엇을 하는 곳인가"),
         bullet("대시보드, 운영 문서, 세션 리포트 구조를 인간 중심으로 정리한다."),
         bullet("현재 상태는 current, 시점 기록은 reports, 점검 항목은 check log에서 본다."),
@@ -211,22 +250,35 @@ def main() -> int:
     hub_page_id = ensure_page(DEVELOPER_PAGE_ID, "노션 구조 정리", hub_blocks)
 
     current_blocks = [
-        text_block("quote", "현재 기준 상태만 짧게 보여주는 사람 중심 작업판이다."),
+        callout("현재 기준 상태만 짧게 보여주는 사람 중심 작업판이다."),
         text_block("heading_2", "Goal"),
         bullet("초보 개발자도 지금 AI가 무엇을 하고 있는지 바로 이해할 수 있는 노션 구조를 만든다."),
         text_block("heading_2", "Purpose"),
         bullet("운영 문서, 세션 리포트, 프로젝트 허브의 역할을 분리해 탐색 비용을 낮춘다."),
-        text_block("heading_2", "Current Board"),
+        text_block("heading_2", "Status"),
         bullet("Status: In Progress"),
         bullet("Progress: 35%"),
-        bullet("Current Focus: 운영 센터 승격, developer 세션 리포트 DB, 세션 자동 기록"),
+        text_block("heading_2", "Owner"),
+        bullet("Codex"),
+        text_block("heading_2", "Next Step"),
+        bullet("AI Session Reports DB와 current 문구를 손본 뒤 linked view 수동 정리를 이어간다."),
+        text_block("heading_2", "Last Updated"),
+        bullet("2026-03-29 00:00 KST"),
+        text_block("heading_2", "Current Focus"),
+        bullet("운영 센터 승격, developer 세션 리포트 DB, 세션 자동 기록"),
+        text_block("heading_2", "Active Work"),
+        bullet("Ops Center 문구 정비"),
+        bullet("current / reports / check log 템플릿 고정"),
         text_block("heading_2", "Checklist"),
         bullet("Ops Center를 루트에서 보이게 만든다."),
         bullet("developer 아래 AI Session Reports DB를 만든다."),
         bullet("세션 시작/저장/종료 시 로컬 리포트를 자동 갱신한다."),
         bullet("프로젝트 허브 표준과 타이틀 규칙을 문서화한다."),
-        text_block("heading_2", "Next Step"),
-        bullet("AI Session Reports DB와 현재 세션 row를 채우고, 이후 linked view 수동 정리를 이어간다."),
+        text_block("heading_2", "Open Issues"),
+        bullet("linked database view와 아이콘 색상은 수동 정리가 필요하다."),
+        text_block("heading_2", "Canonical Links"),
+        bullet("notion-human-ops-standard.md"),
+        bullet("notion-obsidian-style-guide.md"),
     ]
     current_page_id = ensure_page(hub_page_id, "current", current_blocks)
 
@@ -234,9 +286,12 @@ def main() -> int:
         hub_page_id,
         "reports",
         [
-            text_block("quote", "이 페이지는 날짜형 스냅샷과 시점 기록만 둔다."),
+            callout("이 페이지는 날짜형 스냅샷과 시점 기록만 둔다."),
+            text_block("heading_2", "Entry Format"),
             bullet("활성 상태가 바뀌면 current도 함께 갱신한다."),
             bullet("긴 로그는 로컬 문서에 두고 여기에는 요약만 남긴다."),
+            text_block("heading_2", "Source Of Truth"),
+            bullet("원문과 긴 reasoning은 local Markdown이 정본이다."),
         ],
     )
 
@@ -244,8 +299,10 @@ def main() -> int:
         hub_page_id,
         "check log",
         [
-            text_block("quote", "이 페이지는 점검, 경고, follow-up만 둔다."),
+            callout("이 페이지는 점검, 경고, follow-up만 둔다."),
+            text_block("heading_2", "Open Item Rule"),
             bullet("title 불일치, 구조 충돌, 수동 후속 조치를 여기에 남긴다."),
+            text_block("heading_2", "Archive Rule"),
             bullet("완료된 항목은 접거나 archive 처리한다."),
         ],
     )
@@ -254,8 +311,9 @@ def main() -> int:
         hub_page_id,
         "references",
         [
-            text_block("quote", "이 페이지는 기준 문서와 외부 참고 링크만 모은다."),
+            callout("이 페이지는 기준 문서와 외부 참고 링크만 모은다."),
             bullet("notion-human-ops-standard.md"),
+            bullet("notion-obsidian-style-guide.md"),
             bullet("notion-work-note-routing.md"),
             bullet("project-dashboard-standard.md"),
         ],
@@ -273,20 +331,27 @@ def main() -> int:
         "Ops Center와 current 페이지 문구를 손보고 linked views를 수동 정리한다.",
         str(ROOT / ".orchestra/work-notes/2026-03-28__ops__ai-workspace.md"),
         [
-            text_block("quote", "이 페이지는 이번 세션의 사람 중심 리포트다."),
+            callout("이 페이지는 이번 세션의 사람 중심 리포트다."),
             text_block("heading_2", "Goal"),
             bullet("운영 문서와 세션 리포트를 초보 개발자도 이해 가능한 흐름으로 정리한다."),
             text_block("heading_2", "Purpose"),
             bullet("지금 무엇이 진행 중인지, 막힌 것은 무엇인지, 다음에 어디부터 봐야 하는지 바로 알게 한다."),
+            text_block("heading_2", "Status"),
+            bullet("Status: In Progress"),
+            bullet("Progress: 35%"),
+            text_block("heading_2", "Owner"),
+            bullet("Codex"),
+            text_block("heading_2", "Next Step"),
+            bullet("linked view 구성과 후속 title tuning"),
+            text_block("heading_2", "Last Updated"),
+            bullet("2026-03-29 00:00 KST"),
             text_block("heading_2", "Checklist"),
             bullet("Ops Center 생성"),
             bullet("AI Session Reports DB 생성"),
             bullet("노션 구조 정리 프로젝트 허브 생성"),
             bullet("세션 자동 기록 로컬/노션 동시 업데이트 경로 확장"),
-            text_block("heading_2", "Current Board"),
-            bullet("Status: In Progress"),
-            bullet("Progress: 35%"),
-            bullet("Next: linked view 구성과 후속 title tuning"),
+            text_block("heading_2", "Canonical Links"),
+            bullet(str(ROOT / ".orchestra/work-notes/2026-03-28__ops__ai-workspace.md")),
         ],
     )
 

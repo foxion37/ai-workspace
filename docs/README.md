@@ -8,6 +8,8 @@ Use this file to decide which document to open first.
 - `sync-matrix.md`: exact tracked, template-only, and local-only path rules
 - `session-commands.md`: standard session command behavior
 - `notion-human-ops-standard.md`: human-first Notion dashboard, session report, and ops-center design
+- `notion-obsidian-style-guide.md`: title, icon, heading, link, tag, and emphasis rules for Notion and Obsidian
+- `notion-subagent-team.md`: role split and cadence for Notion specialist subagents
 - `home-root/AGENTS.md`: home-root operating routine for Codex-led work
 
 ## Reference Docs

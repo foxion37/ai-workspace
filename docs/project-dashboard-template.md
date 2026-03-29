@@ -8,7 +8,6 @@ Use it when a repo needs the standard `current`, `reports`, and `check log` surf
 
 - `economy-content-agent` -> live, page IDs configured
 - `ai-glossary` -> template pending, page IDs missing
-- `ai-web-project` -> template pending, page IDs missing
 - `linkbot` -> template pending, page IDs missing
 
 Until a project gets its Notion page IDs, `session_work_note.py` keeps the local work note and marks `notion_sync: not_configured`.
@@ -33,6 +32,10 @@ Until a project gets its Notion page IDs, `session_work_note.py` keeps the local
 ```md
 # current
 
+> This page is the live dashboard.
+> Status changes belong here first.
+> Long logs stay in local Markdown and are linked, not pasted.
+
 ## Goal
 - <project goal>
 
@@ -41,6 +44,15 @@ Until a project gets its Notion page IDs, `session_work_note.py` keeps the local
 
 ## Status
 - <in_progress | blocked | monitoring | done>
+
+## Owner
+- <owner>
+
+## Next Step
+- <next concrete action>
+
+## Last Updated
+- <YYYY-MM-DD HH:MM TZ>
 
 ## Progress %
 - <0-100 or manual note>
@@ -58,9 +70,15 @@ Until a project gets its Notion page IDs, `session_work_note.py` keeps the local
 ## References
 - <canonical doc or repo>
 
-## Next Step
-- <next concrete action>
+## Canonical Links
+- <local source of truth or key report path>
 ```
+
+Notes:
+
+- In Notion, the page title already acts as `H1`; keep body headings at `H2`.
+- Use the intro callout as the summary surface.
+- Keep `current`, `reports`, and `check log` as fixed functional page names.
 
 ## `reports` Template
 
