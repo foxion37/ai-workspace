@@ -164,6 +164,10 @@ The shared reporting helper lives in:
 
 - `~/developer/projects/ai-workspace/scripts/session_work_note.py`
 
+The callword summary command lives in:
+
+- `~/.dotfiles/scripts/callwords`
+
 The human-readable local session-report index lives in:
 
 - `~/AI-Workspace/knowledge-db/session-reports/INDEX.md`
@@ -188,6 +192,7 @@ See also:
 
 - `project-commands.md`
 - `environment-commands.md`
+- `callwords`
 
 ## Agent Rule
 

@@ -729,9 +729,9 @@ def main() -> int:
         },
     )
 
-    rename_database(PROJECT_BOARD_DB_ID, "프로젝트 보드 (Project Board)")
-    rename_database(DOCUMENT_BOARD_DB_ID, "문서 보드 (Document Board)")
-    rename_database(SHARED_DATABASES_DB_ID, "공용 데이터베이스 (Shared Databases)")
+    rename_database(PROJECT_BOARD_DB_ID, "레거시 프로젝트 보드 (Legacy Project Board)")
+    rename_database(DOCUMENT_BOARD_DB_ID, "레거시 문서 보드 (Legacy Document Board)")
+    rename_database(SHARED_DATABASES_DB_ID, "레거시 공용 데이터베이스 (Legacy Shared Databases)")
 
     update_config(
         ops_center_page_id,
