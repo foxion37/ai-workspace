@@ -66,6 +66,11 @@ def display_now() -> str:
     return now_kst().strftime("%Y-%m-%d %H:%M %Z")
 
 
+def work_note_variant() -> str:
+    variant = os.environ.get("WORK_NOTE_VARIANT", "session").strip().lower()
+    return variant or "session"
+
+
 def ensure_runtime_dirs() -> None:
     WORK_NOTES_DIR.mkdir(parents=True, exist_ok=True)
     STATE_DIR.mkdir(parents=True, exist_ok=True)
@@ -330,7 +335,7 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
             kind="ops",
             scope_slug="global",
             scope_title="global",
-            notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+            notion_target=ops.get("route", "대시보드 (dashboard) > 운영 센터 (ops center) > 운영 로그 (ops log)"),
             ops_parent_page_id=ops.get("page_id"),
         )
 
@@ -341,7 +346,7 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
             kind="ops",
             scope_slug=slugify(repo_name),
             scope_title=repo_name,
-            notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+            notion_target=ops.get("route", "대시보드 (dashboard) > 운영 센터 (ops center) > 운영 로그 (ops log)"),
             ops_parent_page_id=ops.get("page_id"),
         )
 
@@ -370,7 +375,7 @@ def route_for_repo(repo_root: Path | None, config: dict[str, Any]) -> RouteInfo:
         kind="ops",
         scope_slug=slugify(repo_name),
         scope_title=repo_name,
-        notion_target=ops.get("route", "dashboard > notion manual 1.0 > ops log"),
+        notion_target=ops.get("route", "대시보드 (dashboard) > 운영 센터 (ops center) > 운영 로그 (ops log)"),
         ops_parent_page_id=ops.get("page_id"),
     )
 
@@ -383,27 +388,27 @@ def route_parent_page_id(route: RouteInfo) -> str | None:
 
 def status_label(status: str) -> str:
     mapping = {
-        "in_progress": "In Progress",
-        "blocked": "Blocked",
-        "done": "Done",
-        "monitoring": "Monitoring",
-        "warning": "Warning",
-        "success": "Success",
-        "failed": "Failed",
-        "self_review": "Self Review",
-        "claude_review": "Claude Review",
-        "start": "Started",
-        "save": "Checkpoint",
-        "finish": "Finished",
-        "info": "Info",
+        "in_progress": "진행 중",
+        "blocked": "차단",
+        "done": "완료",
+        "monitoring": "감시 중",
+        "warning": "경고",
+        "success": "성공",
+        "failed": "실패",
+        "self_review": "자체 검토",
+        "claude_review": "Claude 검토",
+        "start": "시작",
+        "save": "저장",
+        "finish": "종료",
+        "info": "정보",
     }
-    return mapping.get(status, status.replace("_", " ").title())
+    return mapping.get(status, status.replace("_", " "))
 
 
 def note_goal(route: RouteInfo) -> str:
     if route.kind == "project":
-        return f"{route.scope_title} 작업의 현재 상태와 다음 행동을 사람 기준으로 이해 가능하게 유지한다."
-    return f"{route.scope_title} 관련 운영 변화와 후속 조치를 빠르게 복원 가능하게 기록한다."
+        return f"{route.scope_title} 작업의 현재 상태와 다음 행동을 사람이 바로 이해할 수 있게 유지한다."
+    return f"{route.scope_title} 관련 운영 변화와 후속 조치를 빠르게 복원할 수 있게 기록한다."
 
 
 def note_purpose(route: RouteInfo) -> str:
@@ -439,15 +444,15 @@ def note_progress(status: str, tasks: list[dict[str, Any]]) -> int:
 def current_focus(route: RouteInfo, tasks: list[dict[str, Any]], incidents: list[dict[str, Any]]) -> str:
     blocked = next((task for task in tasks if task["status"] == "blocked"), None)
     if blocked:
-        return f"Blocked task: {blocked['title']}"
+        return f"차단된 작업: {blocked['title']}"
     open_incident = next((incident for incident in incidents if incident["status"] in OPEN_INCIDENT_STATUSES), None)
     if open_incident:
-        return f"Open incident: {open_incident['title']}"
+        return f"열린 이슈: {open_incident['title']}"
     if tasks:
-        return f"Active task: {tasks[0]['title']}"
+        return f"진행 중 작업: {tasks[0]['title']}"
     if route.kind == "project":
-        return "Project current page and next step alignment"
-    return "Shared operating changes and follow-up"
+        return "프로젝트 현재 상태와 다음 단계 정렬"
+    return "공유 운영 변화와 후속 조치 정리"
 
 
 def active_work_items(note: dict[str, Any], route: RouteInfo) -> list[str]:
@@ -455,20 +460,20 @@ def active_work_items(note: dict[str, Any], route: RouteInfo) -> list[str]:
     if recent_changes:
         return recent_changes
     if route.kind == "project":
-        return ["Project session started; fill current focus, blockers, and next step."]
-    return ["Ops session started; collect relevant changes and keep the log short."]
+        return ["프로젝트 세션 시작: 현재 초점, 막힌 점, 다음 단계를 채운다."]
+    return ["운영 세션 시작: 관련 변경만 모으고 로그는 짧게 유지한다."]
 
 
 def human_guidance(note: dict[str, Any], route: RouteInfo) -> list[str]:
     lines = [
         f"지금 상태: {status_label(note['status'])}, 진행률: {note.get('progress', 0)}%",
-        f"다음에 열면 먼저 볼 것: {note.get('current_focus', 'current focus not set')}",
-        f"바로 할 일: {note.get('next_step', 'next step not set')}",
+        f"다음에 열면 먼저 볼 것: {note.get('current_focus', '현재 초점 미설정')}",
+        f"바로 할 일: {note.get('next_step', '다음 단계 미설정')}",
     ]
     if route.kind == "project":
-        lines.append("세부 변경 기록보다 Active Work와 Checklist를 먼저 본다.")
+        lines.append("세부 변경 기록보다 진행 작업과 체크리스트를 먼저 본다.")
     else:
-        lines.append("세부 로그보다 Open Issues와 Next Step을 먼저 본다.")
+        lines.append("세부 로그보다 열린 이슈와 다음 단계를 먼저 본다.")
     return lines
 
 
@@ -496,14 +501,14 @@ def render_session_report_index(ledger: dict[str, Any]) -> str:
     active = [note for note in notes if note.get("status") not in {"done", "success"}][:20]
     recent = notes[:20]
     lines = [
-        "# Session Reports",
+        "# 세션 리포트",
         "",
         "이 문서는 로컬 세션 리포트 인덱스다.",
-        "인간이 지금 어떤 작업이 진행 중인지 빠르게 파악하는 용도로만 쓴다.",
+        "사람이 지금 어떤 작업이 진행 중인지 빠르게 파악하는 용도로만 쓴다.",
         "",
-        "## Active Now",
+        "## 진행 중",
         "",
-        "| Session | Status | Progress | Updated | Next Step |",
+        "| 세션 | 상태 | 진행률 | 갱신 시각 | 다음 단계 |",
         "| --- | --- | --- | --- | --- |",
     ]
     if not active:
@@ -516,9 +521,9 @@ def render_session_report_index(ledger: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "## Recently Updated",
+            "## 최근 갱신",
             "",
-            "| Session | Status | Updated | Scope |",
+            "| 세션 | 상태 | 갱신 시각 | 범위 |",
             "| --- | --- | --- | --- |",
         ]
     )
@@ -567,69 +572,76 @@ def render_work_note(note: dict[str, Any]) -> str:
         "",
         f"# {note['title']}",
         "",
-        "## Goal",
-        f"- {note.get('goal', 'Goal not set')}",
+        "## 목표",
+        f"- {note.get('goal', '목표 미설정')}",
         "",
-        "## Purpose",
-        f"- {note.get('purpose', 'Purpose not set')}",
+        "## 목적",
+        f"- {note.get('purpose', '목적 미설정')}",
         "",
-        "## Current Board",
-        f"- Status: {status_label(note['status'])}",
-        f"- Progress: {note.get('progress', 0)}%",
-        f"- Scope: {note['scope']}",
-        f"- Route: {note['notion_target']}",
-        f"- Last Updated: {note['date_updated']}",
+        "## 현재 보드",
+        f"- 상태: {status_label(note['status'])}",
+        f"- 진행률: {note.get('progress', 0)}%",
+        f"- 범위: {note['scope']}",
+        f"- 경로: {note['notion_target']}",
+        f"- 마지막 업데이트: {note['date_updated']}",
         "",
-        "## Situation",
+        "## 상황",
         f"- {note['situation']}",
         "",
-        "## Current Focus",
-        f"- {note.get('current_focus', 'Current focus not set')}",
+        "## 현재 초점",
+        f"- {note.get('current_focus', '현재 초점 미설정')}",
         "",
-        "## Active Work",
+        "## 진행 작업",
     ]
     lines.extend(f"- {item}" for item in note.get("active_work", []))
     lines.extend(
         [
             "",
-            "## Checklist",
+            "## 체크리스트",
         ]
     )
     lines.extend(note.get("checklist", []))
     lines.extend(
         [
             "",
-            "## Open Issues",
+            "## 열린 이슈",
         ]
     )
     lines.extend(f"- {item}" for item in note.get("open_issues", []) or ["- none"])
     lines.extend(
         [
             "",
-            "## For Human",
+            "## 사람용 메모",
         ]
     )
     lines.extend(f"- {item}" for item in note.get("human_guidance", []))
     lines.extend(
         [
             "",
-            "## Update Log",
+            "## 업데이트 로그",
         ]
     )
     lines.extend(f"- {item}" for item in note.get("update_log", []))
     lines.extend(
         [
             "",
-            "## References",
+            "## 기준 링크",
         ]
     )
     lines.extend(f"- {item}" for item in note.get("local_refs", []))
     lines.extend(
         [
             "",
-            "## Next Step",
+            "## 다음 단계",
             f"- {note['next_step']}",
             "",
+            "---",
+            "",
+            "## 영문 참고",
+            "- Keep long-form text in Korean.",
+            "- Use `한글 (영어)` only for short labels.",
+            "- Put English long-form notes below a divider when needed.",
+            "- Use `→` for all progress arrows.",
         ]
     )
     return "\n".join(lines).replace("\n  -\n", "\n")
@@ -663,6 +675,25 @@ def enqueue_notion_sync(queue: list[dict[str, Any]], note: dict[str, Any], route
     else:
         queue.append(payload)
     note["notion_sync"] = "pending"
+
+
+def build_note_id(route: RouteInfo, mode: str, variant: str, commit_hash: str | None = None) -> str:
+    day = now_kst().strftime("%Y-%m-%d")
+    slug = route.scope_slug
+    if mode == "save" or (mode == "finish" and variant == "project"):
+        if variant == "project" and commit_hash:
+            return f"{day}__project__{slug}__{commit_hash}"
+        return f"{day}__{route.kind}__{slug}__{now_kst().strftime('%H%M%S')}"
+    return f"{day}__{route.kind}__{slug}"
+
+
+def build_note_title(route: RouteInfo, mode: str, variant: str, commit_hash: str | None = None) -> str:
+    day = now_kst().strftime("%Y-%m-%d")
+    if mode == "save" or (mode == "finish" and variant == "project"):
+        if variant == "project" and commit_hash:
+            return f"{day} | {route.scope_title} | version {commit_hash}"
+        return f"{day} {now_kst().strftime('%H:%M')} | {route.scope_title} | checkpoint"
+    return f"{day} | {route.scope_title} | work note"
 
 
 def notion_request(method: str, url: str, body: dict[str, Any] | None = None, version: str = LEGACY_NOTION_VERSION) -> dict[str, Any]:
@@ -850,7 +881,14 @@ def build_notion_markdown(note: dict[str, Any]) -> str:
         f"## 열린 이슈\n{issues}\n\n"
         f"## 기준 링크\n{refs}\n\n"
         f"## 사람용 메모\n{human}\n\n"
-        f"## 상황\n- {note['situation']}\n"
+        f"## 상황\n- {note['situation']}\n\n"
+        "---\n\n"
+        "## 영문 참고\n"
+        "- This page mirrors the human-readable current state.\n"
+        "- Keep long-form text in Korean.\n"
+        "- Use `한글 (영어)` only for short labels.\n"
+        "- Put English long-form notes below a divider when needed.\n"
+        "- Use `→` for all progress arrows.\n"
     )
 
 
@@ -918,7 +956,7 @@ def queue_summary_lines(queue: list[dict[str, Any]]) -> list[str]:
     for target, count in sorted(grouped.items()):
         lines.append(f"[target] {target} ({count})")
     for item in queue[:5]:
-        lines.append(f"[item] {item['title']} -> {item['notion_target']}")
+        lines.append(f"[item] {item['title']} → {item['notion_target']}")
     return lines
 
 
@@ -934,6 +972,7 @@ def upsert_note(
     *,
     route: RouteInfo,
     mode: str,
+    variant: str,
     repo_path: str,
     status: str,
     summary: str,
@@ -946,19 +985,21 @@ def upsert_note(
     related_incidents: list[str],
     tasks: list[dict[str, Any]],
     incidents: list[dict[str, Any]],
+    note_id: str | None = None,
+    note_title: str | None = None,
     dry_run: bool,
 ) -> tuple[dict[str, Any], Path | None]:
     ensure_runtime_dirs()
     ledger = load_ledger()
     queue = load_queue()
     day = now_kst().strftime("%Y-%m-%d")
-    note_id = f"{day}__{route.kind}__{route.scope_slug}"
+    note_id = note_id or build_note_id(route, mode, variant)
     note = ledger.setdefault("notes", {}).get(note_id)
     if not note:
         note = {
             "id": note_id,
             "type": f"{route.kind}_note",
-            "title": f"{day} | {route.scope_title} | work note",
+            "title": note_title or build_note_title(route, mode, variant),
             "status": status,
             "scope": route.scope_title,
             "repo": repo_path,
@@ -977,6 +1018,8 @@ def upsert_note(
             "next_step": next_step,
             "update_log": [],
         }
+    elif note_title:
+        note["title"] = note_title
     note["status"] = status
     note["repo"] = repo_path
     note["date_updated"] = iso_now()
@@ -1006,13 +1049,13 @@ def upsert_note(
 def default_next_step(route: RouteInfo, tasks: list[dict[str, Any]], incidents: list[dict[str, Any]]) -> str:
     for task in tasks:
         if task["status"] == "blocked":
-            return f"Unblock task: {task['title']}"
+            return f"차단 해제 작업: {task['title']}"
     for incident in incidents:
         if incident["status"] in OPEN_INCIDENT_STATUSES:
-            return f"Review incident: {incident['title']}"
+            return f"이슈 검토: {incident['title']}"
     if route.kind == "project":
-        return "Update the dashboard current page and keep reports/check log in sync."
-    return "Review ops log and pending incidents."
+        return "대시보드 현재 상태를 갱신하고 진행 기록과 점검 기록을 맞춘다."
+    return "운영 로그와 대기 중 이슈를 검토한다."
 
 
 def command_context(args: argparse.Namespace) -> int:
@@ -1028,7 +1071,7 @@ def command_context(args: argparse.Namespace) -> int:
     note_prefix = f"{now_kst().strftime('%Y-%m-%d')}__{route.kind}__{route.scope_slug}"
     latest_note = ledger.get("notes", {}).get(note_prefix)
     lines = [
-        f"[scope] {route.scope_title} -> {route.notion_target}",
+        f"[scope] {route.scope_title} → {route.notion_target}",
         f"[tasks] related={len(tasks)} blocked={len(blocked)}",
         f"[incidents] open={len([i for i in incidents if i['status'] in OPEN_INCIDENT_STATUSES])}",
     ]
@@ -1051,6 +1094,7 @@ def command_start(args: argparse.Namespace) -> int:
     route = route_for_repo(repo_root, load_config())
     tasks = find_related_tasks(repo_root)
     incidents = find_related_incidents(repo_root)
+    variant = work_note_variant()
     summary = args.summary or f"{route.scope_title}: session started"
     if repo_root:
         situation = args.situation or f"{repo_root.name} 세션이 시작됐고, 현재 상태를 사람 기준 리포트로 초기화했다."
@@ -1074,6 +1118,7 @@ def command_start(args: argparse.Namespace) -> int:
         related_incidents=[incident["path"] for incident in incidents[:5]],
         tasks=tasks,
         incidents=incidents,
+        variant=variant,
         dry_run=args.dry_run,
     )
     if args.dry_run:
@@ -1089,10 +1134,12 @@ def command_record(args: argparse.Namespace) -> int:
     route = route_for_repo(repo_root, load_config())
     tasks = find_related_tasks(repo_root)
     incidents = find_related_incidents(repo_root)
+    variant = work_note_variant()
     changes: list[str] = []
     refs: list[str] = []
     summary = args.summary
     situation = args.situation
+    commit_hash = ""
 
     if repo_root:
         try:
@@ -1105,7 +1152,12 @@ def command_record(args: argparse.Namespace) -> int:
             ]
             summary = summary or f"{repo_root.name}: {commit_subject}"
             situation = situation or f"{repo_root.name} 작업 상태가 {args.mode} 단계에서 정리됐다."
-            changes.append(f"{display_now()} commit {commit_hash}: {commit_subject}")
+            if args.mode == "save" and variant == "project":
+                changes.append(f"{display_now()} version {commit_hash}: {commit_subject}")
+            elif args.mode == "save":
+                changes.append(f"{display_now()} checkpoint {commit_hash}: {commit_subject}")
+            else:
+                changes.append(f"{display_now()} commit {commit_hash}: {commit_subject}")
             refs.extend(str(repo_root / path) for path in changed_files[:5])
         except subprocess.CalledProcessError:
             summary = summary or f"{route.scope_title}: work note update"
@@ -1122,9 +1174,15 @@ def command_record(args: argparse.Namespace) -> int:
         "다음 세션에서 현재 상태를 빠르게 복원할 수 있게 한다."
     ]
     next_step = args.next_step or default_next_step(route, tasks, incidents)
+    note_id = None
+    note_title = None
+    if args.mode == "save" or (args.mode == "finish" and variant == "project"):
+        note_id = build_note_id(route, args.mode, variant, commit_hash or None)
+        note_title = build_note_title(route, args.mode, variant, commit_hash or None)
     note, note_path = upsert_note(
         route=route,
         mode=args.mode,
+        variant=variant,
         repo_path=str(repo_root) if repo_root else "",
         status=args.status,
         summary=summary,
@@ -1137,6 +1195,8 @@ def command_record(args: argparse.Namespace) -> int:
         related_incidents=related_incidents,
         tasks=tasks,
         incidents=incidents,
+        note_id=note_id,
+        note_title=note_title,
         dry_run=args.dry_run,
     )
     if args.dry_run:
@@ -1197,14 +1257,14 @@ def watch_once(dry_run: bool, quiet: bool) -> int:
                     route=route,
                     mode="watch",
                     status=task["status"],
-                    summary=f"Task state changed: {task['title']} -> {task['status']}",
+                    summary=f"Task state changed: {task['title']} → {task['status']}",
                     situation="중요 task 상태 전환이 발생했다.",
                     ref_path=str(path),
                     next_step=f"Review task status: {path}",
                     dry_run=dry_run,
                 )
                 if not quiet:
-                    print(f"[task] {path} -> {task['status']}")
+                    print(f"[task] {path} → {task['status']}")
 
     for path in iter_real_incident_files():
         incident = parse_incident(path)
@@ -1220,14 +1280,14 @@ def watch_once(dry_run: bool, quiet: bool) -> int:
                 route=route,
                 mode="watch",
                 status=incident["status"],
-                summary=f"Incident updated: {incident['title']} -> {incident['status']}",
+                summary=f"Incident updated: {incident['title']} → {incident['status']}",
                 situation="반복 확인이 필요한 incident 상태가 바뀌었다.",
                 ref_path=str(path),
                 next_step=f"Review incident: {path}",
                 dry_run=dry_run,
             )
             if not quiet:
-                print(f"[incident] {path} -> {incident['status']}")
+                print(f"[incident] {path} → {incident['status']}")
 
     for path in sorted(REPORT_ROOT.glob("**/latest.md")):
         report_status, report_summary = parse_report_status(path)
@@ -1244,14 +1304,14 @@ def watch_once(dry_run: bool, quiet: bool) -> int:
                     route=route,
                     mode="watch",
                     status=report_status,
-                    summary=f"Report changed: {path.parent.name}/latest.md -> {report_status}",
+                    summary=f"Report changed: {path.parent.name}/latest.md → {report_status}",
                     situation=report_summary,
                     ref_path=str(path),
                     next_step=f"Check latest report: {path}",
                     dry_run=dry_run,
                 )
                 if not quiet:
-                    print(f"[report] {path} -> {report_status}")
+                    print(f"[report] {path} → {report_status}")
 
     if not dry_run:
         save_ledger(ledger)
@@ -1343,6 +1403,8 @@ def build_parser() -> argparse.ArgumentParser:
         record.add_argument("--situation")
         record.add_argument("--next-step")
         default_status = "done" if mode == "finish" else "in_progress"
+        if mode == "save":
+            default_status = "done"
         record.add_argument("--status", default=default_status)
         record.add_argument("--change", action="append", default=[])
         record.add_argument("--ref", action="append", default=[])

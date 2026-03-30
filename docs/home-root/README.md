@@ -20,6 +20,8 @@ These files belong in `ai-workspace` because they define home-root policy and cr
 - `../ai-workspace-rules.md` -> top-level policy
 - `../sync-matrix.md` -> exact shared vs local-only path rules
 - `../session-commands.md` -> session command behavior
+- `../project-commands.md` -> project lifecycle, version saves, and project sync contract
+- `../environment-commands.md` -> environment entry and sync callwords
 
 ## Working Rule
 

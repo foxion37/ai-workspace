@@ -1,6 +1,7 @@
 # Notion Subagent Team
 
 This document defines the specialist subagent team for future Notion-heavy sessions.
+It is subordinate to `docs/notion-queue-operating-standard.md`.
 
 Use this team when the work is primarily about Notion structure, routing, dashboards, sync, or human-readable operations.
 
@@ -8,11 +9,14 @@ Use this team when the work is primarily about Notion structure, routing, dashbo
 
 Keep these rules fixed:
 
-- local-first / Notion-second
+- Notion is the source of truth
+- local is read-only cache and log
+- queue-based processing only
 - `ops` vs `project` routing
 - human-first dashboard
-- raw logs stay local
-- Notion mirrors status, not full raw history
+- detailed logs stay local
+- Notion records only summary logs
+- do not overwrite Notion from local
 
 ## Efficiency Decision
 
@@ -123,11 +127,11 @@ KPIs:
 ## Anti-Patterns
 
 - running all four roles every day regardless of signal
-- treating Notion as raw log storage
+- treating Notion as raw-log storage
 - mixing shared infra notes into project hubs
 - optimizing page aesthetics before route clarity
 - changing structure without recording the rule locally
-- fixing local canonical truth last
+- letting local override Notion
 
 ## Lead Rule
 

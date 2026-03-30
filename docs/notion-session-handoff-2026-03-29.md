@@ -43,7 +43,7 @@ Use this cadence by default:
 
 - Route stayed `ops`.
 - Activated roles: `Operations`, `Maintenance`, `Development`.
-- `Ops Center`, `노션 구조 정리`, `current`, `reports`, `check log` were refreshed to reflect the latest human-facing state.
+- `운영 센터 (ops center)`, `노션 구조 정리`, `current`, `reports`, `check log` were refreshed to reflect the latest human-facing state.
 - `AI Session Reports` now includes `Project / Session`, the duplicate `2026-03-28` rows were reduced to one historical row, and a new `2026-03-29` row was added.
 - Browser automation did not become a trustworthy chart-control path. The dedicated probe still hit the sign-in gate or unstable session state.
 - Chart views are now treated as explicitly user-managed. Keep the standard names `상태 분포 (차트)` and `진척도 비교 (차트)` when the user creates or adjusts them inside `AI Session Reports`.

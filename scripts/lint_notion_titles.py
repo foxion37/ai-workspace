@@ -8,17 +8,16 @@ from pathlib import Path
 ROOT = Path("/Users/barq")
 CONFIG_PATH = ROOT / "developer/projects/ai-workspace/config/notion_work_note_targets.json"
 FILES_TO_SCAN = [
-    ROOT / "developer/projects/ai-workspace/docs/notion-work-note-routing.md",
-    ROOT / "developer/projects/ai-workspace/docs/project-dashboard-standard.md",
-    ROOT / "developer/projects/ai-workspace/docs/project-dashboard-template.md",
-    ROOT / "developer/projects/ai-workspace/docs/notion-human-ops-standard.md",
+    ROOT / "developer/projects/ai-workspace/docs/notion-queue-operating-standard.md",
     ROOT / "developer/projects/ai-workspace/docs/notion-obsidian-style-guide.md",
+    ROOT / "developer/projects/ai-workspace/docs/notion-subagent-team.md",
     ROOT / "Downloads/NOTION_OPERATION_PLAN.md",
     ROOT / "developer/notion-auto-sync/docs/2026-03-21-notion-agent-design.md",
 ]
 
 FIXED_FUNCTIONAL_NAMES = {
-    "운영 센터 (Ops Center)",
+    "운영 센터 (ops center)",
+    "운영 매뉴얼 (ops manual)",
     "현재 상태 (current)",
     "진행 기록 (reports)",
     "점검 기록 (check log)",
@@ -60,15 +59,15 @@ def main() -> int:
             warnings.append(f"[warn] slash route notation found: {path}")
         if "home-home" in text or "홈-home" in text:
             warnings.append(f"[warn] legacy family naming found: {path}")
-        if path.name == "notion-obsidian-style-guide.md" and "Do not use Korean-English bilingual titles by default." not in text:
-            findings.append(f"[error] missing Obsidian naming rule in style guide: {path}")
-        if path.name == "notion-human-ops-standard.md":
-            for fixed_name in sorted(FIXED_FUNCTIONAL_NAMES):
-                if f"`{fixed_name}`" not in text:
-                    warnings.append(f"[warn] fixed functional name not listed in manual: {fixed_name}")
-            for title in sorted(REQUIRED_BILINGUAL_TITLES):
-                if title not in text:
-                    findings.append(f"[error] missing bilingual top-level title in manual: {title}")
+        if path.name == "notion-queue-operating-standard.md":
+            if "Notion은 모든 구조화된 데이터의 source of truth다" not in text:
+                findings.append(f"[error] missing source-of-truth rule in queue standard: {path}")
+            if "Queue Workflow" not in text:
+                findings.append(f"[error] missing queue workflow section: {path}")
+            if "Forbidden Actions" not in text:
+                findings.append(f"[error] missing forbidden actions section: {path}")
+        if path.name == "notion-obsidian-style-guide.md" and "정본은 `docs/notion-queue-operating-standard.md`이다." not in text:
+            findings.append(f"[error] missing queue-standard reference in style guide: {path}")
 
     if findings:
         print("\n".join(findings + warnings))

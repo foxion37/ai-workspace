@@ -1,12 +1,14 @@
 {
   "ops": {
     "page_id": "330883f1-56f5-81fd-9a10-ce37eeac532f",
-    "route": "대시보드 (dashboard) > 노션 운영 매뉴얼 (notion manual) 1.0 > 운영 로그 (ops log)"
+    "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uc6b4\uc601 \uc13c\ud130 (ops center) > \uc6b4\uc601 \ub85c\uadf8 (ops log)",
+    "title": "\uc6b4\uc601 \ub85c\uadf8 (ops log)"
   },
   "ops_center": {
-    "page_id": "331883f1-56f5-81ba-a38e-f4170acc53dc",
-    "route": "대시보드 (dashboard) > 운영 센터 (Ops Center)",
-    "title": "운영 센터 (Ops Center)"
+    "manual_page_id": "333883f1-56f5-8151-a1dd-f6c0db74a06d",
+    "page_id": "333883f1-56f5-812c-8433-d17bd6448519",
+    "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uc6b4\uc601 \uc13c\ud130 (ops center)",
+    "title": "\uc6b4\uc601 \uc13c\ud130 (ops center)"
   },
   "projects": {
     "ai-glossary": {
@@ -15,9 +17,9 @@
       "hub_page_id": "331883f1-56f5-8150-be3d-c1e2a8afde4e",
       "reports_page_id": "331883f1-56f5-81cc-8b7d-ef5219d7c185",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > AI 용어집 (AI Glossary)",
+      "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > AI \uc6a9\uc5b4\uc9d1 (AI Glossary)",
       "template": "current/reports/check log",
-      "title": "AI 용어집 (AI Glossary)"
+      "title": "AI \uc6a9\uc5b4\uc9d1 (AI Glossary)"
     },
     "ai-workspace": {
       "check_log_page_id": "332883f1-56f5-8192-aae8-e49f6194097a",
@@ -25,9 +27,9 @@
       "hub_page_id": "332883f1-56f5-81d3-a9dd-dbaa8ea33796",
       "reports_page_id": "332883f1-56f5-81c5-b9a7-f5628a78ce5d",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > AI 워크스페이스 (AI Workspace)",
+      "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > AI \uc6cc\ud06c\uc2a4\ud398\uc774\uc2a4 (AI Workspace)",
       "template": "current/reports/check log",
-      "title": "AI 워크스페이스 (AI Workspace)"
+      "title": "AI \uc6cc\ud06c\uc2a4\ud398\uc774\uc2a4 (AI Workspace)"
     },
     "economy-content-agent": {
       "check_log_page_id": "331883f1-56f5-8119-a850-e81cf49576ad",
@@ -35,7 +37,7 @@
       "hub_page_id": "314883f1-56f5-80f8-816e-e530e621efd3",
       "reports_page_id": "331883f1-56f5-812d-8372-fc4b8962c406",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > \uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d",
+      "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > \uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d",
       "template": "current/reports/check log",
       "title": "\uacbd\uc81c \ucf58\ud150\uce20 \ubd84\uc11d"
     },
@@ -45,17 +47,17 @@
       "hub_page_id": "331883f1-56f5-8124-b390-e5b60a23c3f8",
       "reports_page_id": "331883f1-56f5-81e9-9370-e92280cc7ce2",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > 링크봇 (Linkbot)",
+      "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > \ub9c1\ud06c\ubd07 (Linkbot)",
       "template": "current/reports/check log",
-      "title": "링크봇 (Linkbot)"
+      "title": "\ub9c1\ud06c\ubd07 (Linkbot)"
     },
     "notion-structure-ops": {
-      "check_log_page_id": "331883f1-56f5-81be-82bf-ff8e537b1f7b",
-      "dashboard_page_id": "331883f1-56f5-811b-89f5-d075266c2b37",
-      "hub_page_id": "331883f1-56f5-8183-b9f3-ddd8ba746d14",
-      "reports_page_id": "331883f1-56f5-8161-acc2-cc3affb2891e",
+      "check_log_page_id": "333883f1-56f5-8146-b098-f926a544c032",
+      "dashboard_page_id": "333883f1-56f5-8124-8a49-f1770804e5d2",
+      "hub_page_id": "333883f1-56f5-816e-aae9-db6238812827",
+      "reports_page_id": "333883f1-56f5-8168-a34f-ec2c1f4daacb",
       "rollout_status": "live",
-      "route": "대시보드 (dashboard) > 개발 (developer) > \ub178\uc158 \uad6c\uc870 \uc815\ub9ac",
+      "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > \ub178\uc158 \uad6c\uc870 \uc815\ub9ac",
       "template": "current/reports/check log",
       "title": "\ub178\uc158 \uad6c\uc870 \uc815\ub9ac"
     }
@@ -66,8 +68,8 @@
     "home-dev-infra": "ops"
   },
   "session_reports": {
-    "database_id": "331883f1-56f5-812e-ab30-e6a4c7a403cb",
-    "route": "대시보드 (dashboard) > 개발 (developer) > AI 세션 리포트 (AI Session Reports)",
-    "title": "AI 세션 리포트 (AI Session Reports)"
+    "database_id": "333883f1-56f5-8145-8d1a-e5e17b492add",
+    "route": "\ub300\uc2dc\ubcf4\ub4dc (dashboard) > \uac1c\ubc1c (developer) > AI \uc138\uc158 \ub9ac\ud3ec\ud2b8 (AI Session Reports)",
+    "title": "AI \uc138\uc158 \ub9ac\ud3ec\ud2b8 (AI Session Reports)"
   }
 }

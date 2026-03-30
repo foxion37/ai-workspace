@@ -104,12 +104,14 @@ Task files should use:
 
 ### Session Start
 
-1. Run `세션 시작` / `session-start` to sync the shared baseline from GitHub
+1. Run `프로젝트 시작` / `project-start` or `세션 시작` / `세션 재개` / `session-start` to sync the shared baseline from GitHub
 2. Check `~/.orchestra/context/summary.md`
 3. Scan `~/.orchestra/tasks/`
 4. Check `~/.orchestra/budget.md`
 5. Check pending handoffs
 6. Log session start in `activity.log`
+
+Environment sync phrases such as `워크스페이스 동기화`, `맥 세션`, `텔레그램 세션`, `이 맥에서 이어간다`, and `환경 맞춰줘` should be treated as a sync entry first, then routed into the needed project or session command.
 
 ### Session End
 
@@ -120,6 +122,9 @@ Task files should use:
 5. Update `decisions.md` if needed
 6. Update `budget.md` if needed
 7. Log session end in `activity.log`
+
+Project lifecycle commands are documented separately in `docs/project-commands.md`.
+Environment sync callwords are documented separately in `docs/environment-commands.md`.
 
 ## Delegation Rules
 

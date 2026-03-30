@@ -1,27 +1,37 @@
 # Session Commands
 
-This document defines the standard session commands for both people and agents.
+This document defines the standard session commands, callwords, and aliases for both people and agents.
 
-## Natural Language Mapping
+## Standard Callwords
 
-- `세션 초기화` means `session-init`
-- `세션 시작` means `session-start`
-- `세션 재개` means `session-start` — "다른 Mac에서 이어간다"는 의미의 별칭
-- `세션 저장` means `session-save`
-- `세션 완료` means `session-finish`
+Use these Korean phrases in conversation. They all map to the shell commands below.
 
-Use the Korean phrases in conversation.
-Use the shell commands in the terminal.
-
-### 세션 재개 vs 세션 시작
-
-두 명령은 동일한 `session-start`를 실행한다.
-의미 차이만 있음:
-
-| 호출어 | 의미 | 상황 |
+| 호출어 | 표준 명령 | 의미 |
 |---|---|---|
-| `세션 시작` | 오늘 작업을 시작한다 | 메인 맥에서 첫 시작 |
-| `세션 재개` | 다른 맥에서 이어간다 | 이어받기, pull + install.sh |
+| `세션 초기화` | `session-init` | repo type에 맞는 `.sessionrc`를 만든다 |
+| `세션 시작` | `session-start` | 오늘 작업 세션을 시작한다 |
+| `세션 재개` | `session-start` | 다른 Mac에서 이어서 작업한다 |
+| `세션 저장` | `session-save` | 날짜/시간 기반 체크포인트를 남긴다 |
+| `세션 완료` | `session-finish` | validate, commit, push로 마무리한다 |
+
+## Optional Phrases
+
+These are also treated as environment-sync requests or `session-start` when the intent is to continue work on another machine or re-sync the environment:
+
+- `워크스페이스 동기화`
+- `이 맥에서 이어간다`
+- `환경 맞춰줘`
+- `세션 동기화`
+
+The project layer has its own document:
+
+- `project-commands.md`
+
+Environment sync callwords are documented separately:
+
+- `environment-commands.md`
+
+Use the shell commands in the terminal.
 
 ## Commands
 
@@ -60,8 +70,8 @@ Shared baseline repos:
 - `~/.dotfiles`
 
 It does not sync normal project repos, iCloud working files, or local runtime state.
-It now also creates or updates a human-readable session report locally.
-If the Notion route is wired and auth works, it also queues or syncs the matching Notion page.
+It now also creates or updates a human-readable local session log.
+If the Notion route is wired and auth works, it also queues the matching Notion update through the queue standard.
 
 ### `session-save`
 
@@ -73,6 +83,9 @@ It does:
 2. optional validation
 3. `git add -A`
 4. local commit
+5. local work note update
+
+`session-save` is a timestamped checkpoint. It keeps the local record, Git history, and any active Notion or NAS links aligned, but it does not define a version boundary for the project as a whole.
 
 It does not push by default.
 
@@ -90,6 +103,7 @@ It does:
 3. `git add -A`
 4. local commit
 5. `git push`
+6. local work note update
 
 Before running it, rerender `~/AI-Workspace/knowledge-db/incidents/INDEX.md` if the session created or updated any incident report.
 If the shared work-note helper is installed, it also updates the current session report and the local session-report index after a successful finish.
@@ -159,7 +173,7 @@ Manual helper commands:
 - `python3 ~/developer/projects/ai-workspace/scripts/session_work_note.py queue-status`
 - `python3 ~/developer/projects/ai-workspace/scripts/session_work_note.py sync`
 
-Use `queue-status` to inspect pending Notion writes.
+Use `queue-status` to inspect pending Notion queue items.
 Use `sync` only after `NOTION_API_KEY` and the target page IDs are configured.
 Use `start` to create or refresh the current session report if a session begins outside the standard wrapper.
 
@@ -169,6 +183,11 @@ Zsh convenience names:
 - `세션시작`
 - `세션저장`
 - `세션완료`
+
+See also:
+
+- `project-commands.md`
+- `environment-commands.md`
 
 ## Agent Rule
 
@@ -182,6 +201,8 @@ When a user says `세션 저장`, agents should run `session-save`.
 
 When a user says `세션 완료`, agents should run `session-finish`.
 
-When a user says `이 맥에서 이어간다`, `환경 맞춰줘`, `세션 동기화`, or similar, agents should run `session-start`.
+When a user says `워크스페이스 동기화`, `이 맥에서 이어간다`, `환경 맞춰줘`, `세션 동기화`, or similar, agents should run `session-start`.
 
-If a meaningful blocker, resolution, or operating change happens and the user forgets to run a session command, agents should still update the local work note and related local canonical artifacts.
+When a user says `맥 세션`, `텔레그램 세션`, or a broader environment sync phrase, agents should treat it as an environment sync request first and then proceed with the needed command.
+
+If a meaningful blocker, resolution, or operating change happens and the user forgets to run a session command, agents should still update the local work log and related canonical artifacts, then queue Notion updates if the route is wired.

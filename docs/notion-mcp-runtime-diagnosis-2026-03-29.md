@@ -18,7 +18,7 @@ The problem is that the available Notion tool surface is only partially exposed 
 
 - `mcp__notion__notion_fetch` works
 - `mcp__notion__notion_search` works
-- live reads for `Ops Center`, `AI Session Reports`, and `노션 구조 정리` succeeded
+- live reads for `운영 센터 (ops center)`, `AI Session Reports`, and `노션 구조 정리` succeeded
 - `mcp__codex_apps__notion_mcp_server_notion_query_data_sources` failed with `tool not found`
 
 ## Diagnosis
@@ -42,7 +42,7 @@ Use these paths as the stable baseline:
 1. `mcp__notion__notion_fetch`
 2. `mcp__notion__notion_search`
 3. `mcp__notion__notion_update_page`
-4. local-first scripts that call the Notion REST API directly
+4. queue-driven local scripts that call the Notion REST API directly
 
 Do not assume `notion-query-data-sources` is callable in every Codex runtime, even if plugin docs mention it.
 
@@ -53,7 +53,7 @@ It is a UI-layer problem.
 
 Notion chart views are still best treated as:
 
-- local-first planning
+- queue-based planning
 - Notion API for content and database structure
 - authenticated browser automation for chart probing
 - live UI manual creation as the fallback

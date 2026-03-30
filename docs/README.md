@@ -7,9 +7,11 @@ Use this file to decide which document to open first.
 - `ai-workspace-rules.md`: top-level policy for storage, sync, secrets, and backups
 - `sync-matrix.md`: exact tracked, template-only, and local-only path rules
 - `session-commands.md`: standard session command behavior
-- `notion-human-ops-standard.md`: human-first Notion dashboard, session report, and ops-center design
-- `notion-obsidian-style-guide.md`: title, icon, heading, link, tag, and emphasis rules for Notion and Obsidian
-- `notion-subagent-team.md`: role split and cadence for Notion specialist subagents
+- `project-commands.md`: project lifecycle, version saves, and project sync contract
+- `environment-commands.md`: environment entry and sync callwords such as `맥 세션` and `텔레그램 세션`
+- `notion-queue-operating-standard.md`: canonical Notion queue, source-of-truth, and logging contract
+- `notion-obsidian-style-guide.md`: supplementary title, icon, heading, link, tag, and emphasis rules
+- `notion-subagent-team.md`: supplementary role split and cadence for Notion specialist subagents
 - `home-root/AGENTS.md`: home-root operating routine for Codex-led work
 
 ## Reference Docs
